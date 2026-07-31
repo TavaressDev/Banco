@@ -21,7 +21,10 @@ package br.com.arthur.banco;
             }
 
             double rendimento = getSaldo() * (percentual / 100);
-            depositar(rendimento);
+            creditar(
+                rendimento,
+                TipoTransacao.RENDIMENTO
+            );
         }
         @Override
         protected double obterTarifaSaque() {

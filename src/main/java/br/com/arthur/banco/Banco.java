@@ -1,13 +1,14 @@
 package br.com.arthur.banco;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Banco {
-    private final List<ContaBancaria> contas;
+    private final Map<String, ContaBancaria> contas;
 
     public Banco() {
-        this.contas = new ArrayList<>();    
+        this.contas = new HashMap<>();    
     }
 
     public void adicionarConta(ContaBancaria conta) {
@@ -17,15 +18,13 @@ public class Banco {
             );
         }
 
-        for (ContaBancaria c : contas) {
-            if (c.getNumero().equals(conta.getNumero())) {
-                throw new IllegalArgumentException(
-                    "Já existe uma conta com o mesmo número."
-                );
-            }
+        if(contas.containsKey(conta.getNumero())){
+            throw new IllegalArgumentException(
+                "Já existe uma conta com o mesmo número."
+            );
         }
 
-        contas.add(conta);
+        contas.put(conta.getNumero(), conta);
     }
 
     public ContaBancaria buscarContaPorNumero(String numero) {
@@ -35,15 +34,15 @@ public class Banco {
             );
         }
 
-        for (ContaBancaria c : contas) {
-            if (c.getNumero().equals(numero)) {
-                return c;
-            }
-        }
+        ContaBancaria conta = contas.get(numero);
 
-        throw new ContaNaoEncontradaException(
-            "Conta com número " + numero + " não encontrada."
-        );
+        if (conta == null) { 
+            throw new ContaNaoEncontradaException(
+                "Conta com número " + numero + " não encontrada."
+            );
+        }
+        
+        return conta;
     }
 
     public void transferir(String numeroOrigem, String numeroDestino, double valor){
@@ -68,6 +67,10 @@ public class Banco {
         }
 
         rendivel.aplicarRendimento(percentual);
+    }
+
+    public List<ContaBancaria> listarContas() {
+        return List.copyOf(contas.values());
     }
 
 }

@@ -75,4 +75,48 @@ class ContaPoupancaTest {
         );
     }
 
+    @Test
+    void deveRegistrarRendimentoNoHistorico() {
+        ContaPoupanca conta = new ContaPoupanca("Maria", "001");
+        conta.depositar(200.0);
+
+        conta.aplicarRendimento(2.0);
+
+        List<Transacao> historico = conta.getTransacaosHistorico();
+
+        assertAll(
+            () -> assertEquals(2, historico.size()),
+            () -> assertEquals(
+                TipoTransacao.RENDIMENTO,
+                historico.get(1).getTipo()
+            ),
+            () -> assertEquals(
+                4.0,
+                historico.get(1).getValor(),
+                0.001
+            ),
+            () -> assertEquals(
+                204.0,
+                conta.getSaldo(),
+                0.001
+            )
+        );
+    }
+
+    @Test
+    void naoDevePermitirAlterarHistoricoExternamente() {
+        ContaPoupanca conta = new ContaPoupanca("Maria", "001");
+        conta.depositar(100.0);
+
+        List<Transacao> historico = conta.getTransacaosHistorico();
+
+        assertThrows(
+            UnsupportedOperationException.class,
+            () -> historico.add(
+                new Transacao(TipoTransacao.DEPOSITO, 500.0)
+            )
+        );
+
+        assertEquals(1, conta.getTransacaosHistorico().size());
+    }
 }

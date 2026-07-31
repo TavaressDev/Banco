@@ -48,10 +48,7 @@ public abstract class ContaBancaria {
             );
         }
 
-        saldo += valor;
-        transacaosHistorico.add(
-            new Transacao(TipoTransacao.DEPOSITO, valor)
-        );    
+        creditar(valor, TipoTransacao.DEPOSITO);
     }
 
     public List<Transacao> getTransacaosHistorico() {
@@ -59,6 +56,39 @@ public abstract class ContaBancaria {
     }
 
     public void sacar(double valor) {
+        debitar(valor, TipoTransacao.SAQUE);
+    }
+
+    public void transferir(ContaBancaria contaDestino, double valor) {
+        if (contaDestino == null) {
+            throw new IllegalArgumentException(
+                "A conta de destino não pode ser nula."
+            );
+        }
+
+        if (contaDestino == this) {
+            throw new IllegalArgumentException(
+                "Não é possível transferir para a mesma conta."
+            );
+        }
+        debitar(valor, TipoTransacao.TRANSFERENCIA);
+        contaDestino.creditar(
+            valor,
+            TipoTransacao.TRANSFERENCIA
+        );
+    }
+
+    protected abstract double obterTarifaSaque();
+
+    protected void creditar(double valor, TipoTransacao tipoTransacao) {
+        saldo += valor;
+
+        transacaosHistorico.add(
+            new Transacao(tipoTransacao, valor)
+        );
+    }
+
+    protected void debitar(double valor, TipoTransacao tipoTransacao) {
         if (valor <= 0) {
             throw new IllegalArgumentException(
                 "O valor do saque deve ser maior que zero."
@@ -74,25 +104,28 @@ public abstract class ContaBancaria {
         }
 
         saldo -= valorComTaxa;
+
+        transacaosHistorico.add(
+            new Transacao(tipoTransacao, valor)
+        );
     }
 
-    public void transferir(ContaBancaria contaDestino, double valor) {
-        if (contaDestino == null) {
-            throw new IllegalArgumentException(
-                "A conta de destino não pode ser nula."
-            );
+
+    @Override
+    public boolean equals(Object objeto) {
+        if (this == objeto) {
+            return true;
         }
 
-        if (contaDestino == this) {
-            throw new IllegalArgumentException(
-                "Não é possível transferir para a mesma conta."
-            );
+        if (!(objeto instanceof ContaBancaria outraConta)) {
+            return false;
         }
 
-        this.sacar(valor);
-        contaDestino.depositar(valor);
+        return numero.equals(outraConta.numero);
     }
 
-    protected abstract double obterTarifaSaque();
-
+    @Override
+    public int hashCode() {
+        return numero.hashCode();
+    }
 }
