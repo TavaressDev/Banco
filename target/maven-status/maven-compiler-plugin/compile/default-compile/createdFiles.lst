@@ -1,3 +1,4 @@
+br/com/arthur/banco/Caixa.class
 br/com/arthur/banco/Rendivel.class
 br/com/arthur/banco/ContaPoupanca.class
 br/com/arthur/banco/ContaNaoRendivelException.class
@@ -5,6 +6,7 @@ br/com/arthur/banco/ContaCorrente.class
 br/com/arthur/banco/Banco.class
 br/com/arthur/banco/ContaNaoEncontradaException.class
 br/com/arthur/banco/App.class
+br/com/arthur/banco/RepositorioConta.class
 br/com/arthur/banco/Transacao.class
 br/com/arthur/banco/TipoTransacao.class
 br/com/arthur/banco/ContaBancaria.class
