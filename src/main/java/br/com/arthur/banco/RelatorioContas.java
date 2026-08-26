@@ -15,4 +15,11 @@ public class RelatorioContas {
 
         return total;
     }
+
+    public void adicionarContaCorrente(
+        List<? super ContaCorrente> contas,
+        ContaCorrente conta
+    ) {
+        contas.add(conta);
+    }
 }

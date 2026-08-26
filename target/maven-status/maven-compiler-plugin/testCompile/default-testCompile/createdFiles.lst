@@ -1,6 +1,8 @@
-br/com/arthur/banco/CaixaTest.class
-br/com/arthur/banco/ContaCorrenteTest.class
-br/com/arthur/banco/RepositorioContaTest.class
-br/com/arthur/banco/TransacaoTest.class
-br/com/arthur/banco/ContaPoupancaTest.class
-br/com/arthur/banco/BancoTest.class
+br\com\arthur\banco\ContaCorrenteTest.class
+br\com\arthur\banco\ContaPoupancaTest.class
+br\com\arthur\banco\RepositorioContaTest.class
+br\com\arthur\banco\RelatorioContasTest.class
+br\com\arthur\banco\BancoTest.class
+br\com\arthur\banco\ContaBancariaTest.class
+br\com\arthur\banco\TransacaoTest.class
+br\com\arthur\banco\CaixaTest.class
