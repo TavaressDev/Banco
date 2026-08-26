@@ -1,5 +1,6 @@
 package br.com.arthur.banco;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,4 +74,69 @@ public class Banco {
         return List.copyOf(contas.values());
     }
 
+    public List<ContaBancaria> buscarContasComSaldoMaiorQue(double valor) {
+        return contas.values()
+            .stream()
+            .filter(conta -> conta.getSaldo() > valor)
+            .toList();
+    }
+
+
+    public List<String> listarNumerosDasContas() {
+        return contas.values()
+            .stream()
+            .map(ContaBancaria::getNumero)
+            .toList();
+    }
+
+    public List<String> listarNumerosDasContasComSaldoMaiorQue(double valor) {
+        return contas.values()
+            .stream()
+            .filter(conta -> conta.getSaldo() > valor)
+            .map(ContaBancaria::getNumero)
+            .toList();
+    }
+
+    public double calcularSaldoTotal() {
+        return contas.values()
+            .stream()
+            .map(ContaBancaria::getSaldo)
+            .reduce(0.0, Double::sum);
+    }
+
+    public List<ContaBancaria> listarContasOrdenadasPorSaldo() {
+        return contas.values()
+            .stream()
+            .sorted(
+                Comparator.comparingDouble(
+                    ContaBancaria::getSaldo
+                )
+            )
+            .toList();
+    }
+
+    public ContaBancaria buscarPrimeiraContaComSaldoMaiorQue(double valor) {
+        return contas.values()
+            .stream()
+            .filter(conta -> conta.getSaldo() > valor)
+            .findFirst()
+            .orElseThrow(
+                () -> new ContaNaoEncontradaException(
+                    "Nenhuma conta encontrada com saldo maior que " + valor + "."
+                )
+            );
+    }
+
+    public boolean existeContaComSaldoMaiorQue(double valor) {
+        return contas.values()
+            .stream()
+            .anyMatch(conta -> conta.getSaldo() > valor);
+    }
+
+    public long contarContasComSaldoMaiorQue(double valor) {
+        return contas.values()
+            .stream()
+            .filter(conta -> conta.getSaldo() > valor)
+            .count();
+    }
 }

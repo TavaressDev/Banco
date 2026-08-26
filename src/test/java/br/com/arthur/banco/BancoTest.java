@@ -186,4 +186,161 @@ class BancoTest {
             () -> assertTrue(contas.contains(contaPoupanca))
         );
     }
+
+    @Test
+    void deveBuscarContasComSaldoMaiorQueValorInformado() {
+        ContaPoupanca conta1 =
+            new ContaPoupanca("Carlos", "001");
+
+        ContaPoupanca conta2 =
+            new ContaPoupanca("Ana", "002");
+
+        ContaPoupanca conta3 =
+            new ContaPoupanca("Maria", "003");
+
+        conta1.depositar(50.0);
+        conta2.depositar(200.0);
+        conta3.depositar(300.0);
+
+        banco.adicionarConta(conta1);
+        banco.adicionarConta(conta2);
+        banco.adicionarConta(conta3);
+
+        List<ContaBancaria> resultado =
+            banco.buscarContasComSaldoMaiorQue(100.0);
+
+        assertEquals(2, resultado.size());
+        assertTrue(resultado.contains(conta2));
+        assertTrue(resultado.contains(conta3));
+    }
+
+    @Test
+    void deveListarNumerosDasContas() {
+        ContaCorrente conta1 =
+            new ContaCorrente("Carlos", "001");
+
+        ContaPoupanca conta2 =
+            new ContaPoupanca("Ana", "002");
+
+        banco.adicionarConta(conta1);
+        banco.adicionarConta(conta2);
+
+        List<String> numeros =
+            banco.listarNumerosDasContas();
+
+        assertEquals(2, numeros.size());
+        assertTrue(numeros.contains("001"));
+        assertTrue(numeros.contains("002"));
+    }
+
+    @Test
+    void deveListarNumerosDasContasComSaldoMaiorQueValor() {
+        ContaPoupanca conta1 =
+            new ContaPoupanca("Carlos", "001");
+
+        ContaPoupanca conta2 =
+            new ContaPoupanca("Ana", "002");
+
+        ContaPoupanca conta3 =
+            new ContaPoupanca("Maria", "003");
+
+        conta1.depositar(50.0);
+        conta2.depositar(200.0);
+        conta3.depositar(300.0);
+
+        banco.adicionarConta(conta1);
+        banco.adicionarConta(conta2);
+        banco.adicionarConta(conta3);
+
+        List<String> numeros =
+            banco.listarNumerosDasContasComSaldoMaiorQue(100.0);
+
+        assertEquals(2, numeros.size());
+        assertTrue(numeros.contains("002"));
+        assertTrue(numeros.contains("003"));
+    }
+
+    @Test
+    void deveCalcularSaldoTotalDasContas() {
+        ContaPoupanca conta1 =
+            new ContaPoupanca("Carlos", "001");
+
+        ContaPoupanca conta2 =
+            new ContaPoupanca("Ana", "002");
+
+        ContaPoupanca conta3 =
+            new ContaPoupanca("Maria", "003");
+
+        conta1.depositar(100.0);
+        conta2.depositar(200.0);
+        conta3.depositar(300.0);
+
+        banco.adicionarConta(conta1);
+        banco.adicionarConta(conta2);
+        banco.adicionarConta(conta3);
+
+        double total = banco.calcularSaldoTotal();
+
+        assertEquals(600.0, total, 0.001);
+    }
+
+    @Test
+    void deveListarContasOrdenadasPorSaldo() {
+        ContaPoupanca conta1 =
+            new ContaPoupanca("Carlos", "001");
+
+        ContaPoupanca conta2 =
+            new ContaPoupanca("Ana", "002");
+
+        ContaPoupanca conta3 =
+            new ContaPoupanca("Maria", "003");
+
+        conta1.depositar(300.0);
+        conta2.depositar(50.0);
+        conta3.depositar(200.0);
+
+        banco.adicionarConta(conta1);
+        banco.adicionarConta(conta2);
+        banco.adicionarConta(conta3);
+
+        List<ContaBancaria> resultado =
+            banco.listarContasOrdenadasPorSaldo();
+
+        assertAll(
+            () -> assertSame(conta2, resultado.get(0)),
+            () -> assertSame(conta3, resultado.get(1)),
+            () -> assertSame(conta1, resultado.get(2))
+        );
+    }
+
+    @Test
+    void deveVerificarSeExisteContaComSaldoMaiorQueValor() {
+        ContaPoupanca conta = new ContaPoupanca("Carlos", "001");
+        conta.depositar(200.0);
+        banco.adicionarConta(conta);
+
+        assertTrue(
+            banco.existeContaComSaldoMaiorQue(100.0)
+        );
+    }
+
+    @Test
+    void deveContarContasComSaldoMaiorQueValor() {
+        ContaPoupanca conta1 = new ContaPoupanca("Carlos", "001");
+        ContaPoupanca conta2 = new ContaPoupanca("Ana", "002");
+        ContaPoupanca conta3 = new ContaPoupanca("Maria", "003");
+
+        conta1.depositar(50.0);
+        conta2.depositar(200.0);
+        conta3.depositar(300.0);
+
+        banco.adicionarConta(conta1);
+        banco.adicionarConta(conta2);
+        banco.adicionarConta(conta3);
+
+        assertEquals(
+            2,
+            banco.contarContasComSaldoMaiorQue(100.0)
+        );
+    }
 }
