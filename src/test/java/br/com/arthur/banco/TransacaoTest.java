@@ -3,7 +3,7 @@ package br.com.arthur.banco;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
+import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -50,6 +50,36 @@ class TransacaoTest {
 
         assertEquals(
             "Valor da transação deve ser positivo.",
+            exception.getMessage()
+        );
+    }
+
+    @Test
+    void deveRetornarDataDaTransacao() {
+        Transacao transacao =
+            new Transacao(TipoTransacao.DEPOSITO, 100.0);
+
+        LocalDate hoje = LocalDate.now();
+
+        assertEquals(
+            hoje,
+            transacao.getData()
+        );
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoDataHoraForNula() {
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> new Transacao(
+                TipoTransacao.DEPOSITO,
+                100.0,
+                null
+            )
+        );
+
+        assertEquals(
+            "Data e hora não podem ser nulas.",
             exception.getMessage()
         );
     }
