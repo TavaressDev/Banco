@@ -343,4 +343,25 @@ class BancoTest {
             banco.contarContasComSaldoMaiorQue(100.0)
         );
     }
+
+    @Test
+    void deveListarResumoDasContas() {
+        ContaPoupanca conta =
+            new ContaPoupanca("Maria", "001");
+
+        conta.depositar(250.0);
+
+        banco.adicionarConta(conta);
+
+        List<ContaResumo> resumos =
+            banco.listarResumosDasContas();
+
+        ContaResumo resumo = resumos.get(0);
+
+        assertAll(
+            () -> assertEquals("001", resumo.numero()),
+            () -> assertEquals("Maria", resumo.titular()),
+            () -> assertEquals(250.0, resumo.saldo(), 0.001)
+        );
+    }
 }

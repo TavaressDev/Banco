@@ -139,4 +139,17 @@ public class Banco {
             .filter(conta -> conta.getSaldo() > valor)
             .count();
     }
+
+    public List<ContaResumo> listarResumosDasContas() {
+        return contas.values()
+            .stream()
+            .map(conta ->
+                new ContaResumo(
+                    conta.getNumero(),
+                    conta.getTitular(),
+                    conta.getSaldo()
+                )
+            )
+            .toList();
+    }
 }

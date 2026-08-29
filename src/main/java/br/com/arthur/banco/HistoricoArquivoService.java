@@ -1,5 +1,6 @@
 package br.com.arthur.banco;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,7 +11,7 @@ public class HistoricoArquivoService {
     public void exportar(
         ContaBancaria conta,
         Path caminho
-    ) throws IOException {
+    )  {
 
         if (conta == null) {
             throw new IllegalArgumentException(
@@ -34,7 +35,34 @@ public class HistoricoArquivoService {
                     + transacao.getDataHoraFormatada()
             )
             .toList();
+            try {
+                Files.write(caminho, linhas);
+            } catch (IOException e) {
+                throw new ExportacaoException(
+                    "Erro ao exportar o histórico da conta.",
+                    e
+                );
+            }
+    }
 
-        Files.write(caminho, linhas);
+    public List<String> lerHistorico(Path caminho) {
+        if (caminho == null) {
+            throw new IllegalArgumentException(
+                "O caminho não pode ser nulo."
+                );
+            }
+
+            try (
+                BufferedReader reader =
+                    Files.newBufferedReader(caminho)
+            ) {
+                return reader.lines().toList();
+
+            } catch (IOException e) {
+                throw new ExportacaoException(
+                    "Não foi possível ler o histórico.",
+                    e
+                );
+            }
     }
 }
