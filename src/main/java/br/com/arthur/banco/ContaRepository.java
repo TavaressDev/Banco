@@ -10,4 +10,6 @@ public interface ContaRepository {
     Optional<ContaBancaria> buscarPorNumero(String numero);
 
     List<ContaBancaria> listarTodas();
+
+    void salvarTodas(List<ContaBancaria> contas);
 }

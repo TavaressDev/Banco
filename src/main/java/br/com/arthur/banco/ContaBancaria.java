@@ -9,23 +9,32 @@ public abstract class ContaBancaria {
     private double saldo;
     private final List<Transacao> transacaosHistorico;
 
-
     public ContaBancaria(String titular, String numero) {
+        this(titular, numero, 0.0);
+    }
+
+    protected ContaBancaria(
+            String titular,
+            String numero,
+            double saldo) {
         if (titular == null || titular.isBlank()) {
             throw new IllegalArgumentException(
-                "O titular não pode ser nulo ou vazio."
-            );
+                    "O titular não pode ser nulo ou vazio.");
         }
 
         if (numero == null || numero.isBlank()) {
             throw new IllegalArgumentException(
-                "O número da conta não pode ser nulo ou vazio."
-            );
+                    "O número da conta não pode ser nulo ou vazio.");
+        }
+
+        if (saldo < 0) {
+            throw new IllegalArgumentException(
+                    "O saldo não pode ser negativo.");
         }
 
         this.titular = titular;
         this.numero = numero;
-        this.saldo = 0.0;
+        this.saldo = saldo;
         this.transacaosHistorico = new ArrayList<>();
     }
 
@@ -44,8 +53,7 @@ public abstract class ContaBancaria {
     public void depositar(double valor) {
         if (valor <= 0) {
             throw new IllegalArgumentException(
-                "O valor do depósito deve ser maior que zero."
-            );
+                    "O valor do depósito deve ser maior que zero.");
         }
 
         creditar(valor, TipoTransacao.DEPOSITO);
@@ -59,57 +67,63 @@ public abstract class ContaBancaria {
         debitar(valor, TipoTransacao.SAQUE);
     }
 
-    public void transferir(ContaBancaria contaDestino, double valor) {
+    public void transferir(
+            ContaBancaria contaDestino,
+            double valor) {
         if (contaDestino == null) {
             throw new IllegalArgumentException(
-                "A conta de destino não pode ser nula."
-            );
+                    "A conta de destino não pode ser nula.");
         }
 
         if (contaDestino == this) {
             throw new IllegalArgumentException(
-                "Não é possível transferir para a mesma conta."
-            );
+                    "Não é possível transferir para a mesma conta.");
         }
-        debitar(valor, TipoTransacao.TRANSFERENCIA);
+
+        debitar(
+                valor,
+                TipoTransacao.TRANSFERENCIA);
+
         contaDestino.creditar(
-            valor,
-            TipoTransacao.TRANSFERENCIA
-        );
+                valor,
+                TipoTransacao.TRANSFERENCIA);
     }
 
     protected abstract double obterTarifaSaque();
 
-    protected void creditar(double valor, TipoTransacao tipoTransacao) {
+    protected void creditar(
+            double valor,
+            TipoTransacao tipoTransacao) {
         saldo += valor;
 
         transacaosHistorico.add(
-            new Transacao(tipoTransacao, valor)
-        );
+                new Transacao(
+                        tipoTransacao,
+                        valor));
     }
 
-    protected void debitar(double valor, TipoTransacao tipoTransacao) {
+    protected void debitar(
+            double valor,
+            TipoTransacao tipoTransacao) {
         if (valor <= 0) {
             throw new IllegalArgumentException(
-                "O valor do saque deve ser maior que zero."
-            );
+                    "O valor do saque deve ser maior que zero.");
         }
 
         double valorComTaxa = valor + obterTarifaSaque();
 
         if (valorComTaxa > saldo) {
             throw new IllegalArgumentException(
-                "Saldo insuficiente para realizar o saque."
-            );
+                    "Saldo insuficiente para realizar o saque.");
         }
 
         saldo -= valorComTaxa;
 
         transacaosHistorico.add(
-            new Transacao(tipoTransacao, valor)
-        );
+                new Transacao(
+                        tipoTransacao,
+                        valor));
     }
-
 
     @Override
     public boolean equals(Object objeto) {
