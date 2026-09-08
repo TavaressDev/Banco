@@ -59,59 +59,13 @@ public class ContaRepositoryPostgres implements ContaRepository {
     @Override
     public void salvar(ContaBancaria conta) {
 
-        String sql = """
-                INSERT INTO contas (
-                    numero,
-                    titular,
-                    tipo,
-                    saldo
-                )
-                VALUES (?, ?, ?, ?)
-
-                ON CONFLICT (numero)
-                DO UPDATE SET
-                    titular = EXCLUDED.titular,
-                    tipo = EXCLUDED.tipo,
-                    saldo = EXCLUDED.saldo
-                """;
-
-        String tipo;
-
-        if (conta instanceof ContaCorrente) {
-            tipo = "CORRENTE";
-        } else if (conta instanceof ContaPoupanca) {
-            tipo = "POUPANCA";
-        } else {
-            throw new IllegalArgumentException(
-                    "Tipo de conta não suportado: "
-                            + conta.getClass().getSimpleName());
-        }
-
         try (
                 Connection connection = DriverManager.getConnection(
                         url,
                         usuario,
-                        senha);
+                        senha)) {
 
-                PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setString(
-                    1,
-                    conta.getNumero());
-
-            statement.setString(
-                    2,
-                    conta.getTitular());
-
-            statement.setString(
-                    3,
-                    tipo);
-
-            statement.setDouble(
-                    4,
-                    conta.getSaldo());
-
-            statement.executeUpdate();
+            salvar(connection, conta);
 
         } catch (SQLException e) {
 
@@ -192,5 +146,95 @@ public class ContaRepositoryPostgres implements ContaRepository {
                 throw new IllegalStateException(
                         "Tipo de conta desconhecido: " + tipo);
         };
+    }
+
+    private void salvar(
+            Connection connection,
+            ContaBancaria conta) throws SQLException {
+
+        String sql = """
+                INSERT INTO contas (
+                    numero,
+                    titular,
+                    tipo,
+                    saldo
+                )
+                VALUES (?, ?, ?, ?)
+
+                ON CONFLICT (numero)
+                DO UPDATE SET
+                    titular = EXCLUDED.titular,
+                    tipo = EXCLUDED.tipo,
+                    saldo = EXCLUDED.saldo
+                """;
+
+        String tipo;
+
+        if (conta instanceof ContaCorrente) {
+            tipo = "CORRENTE";
+        } else if (conta instanceof ContaPoupanca) {
+            tipo = "POUPANCA";
+        } else {
+            throw new IllegalArgumentException(
+                    "Tipo de conta não suportado: "
+                            + conta.getClass().getSimpleName());
+        }
+
+        try (
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(
+                    1,
+                    conta.getNumero());
+
+            statement.setString(
+                    2,
+                    conta.getTitular());
+
+            statement.setString(
+                    3,
+                    tipo);
+
+            statement.setDouble(
+                    4,
+                    conta.getSaldo());
+
+            statement.executeUpdate();
+        }
+    }
+
+    @Override
+    public void salvarTodas(
+            List<ContaBancaria> contas) {
+
+        try (
+                Connection connection = DriverManager.getConnection(
+                        url,
+                        usuario,
+                        senha)) {
+
+            connection.setAutoCommit(false);
+
+            try {
+
+                for (ContaBancaria conta : contas) {
+                    salvar(connection, conta);
+                }
+
+                connection.commit();
+
+            } catch (Exception e) {
+
+                connection.rollback();
+
+                throw e;
+            }
+
+        } catch (SQLException e) {
+
+            throw new RuntimeException(
+                    "Erro ao salvar contas no banco",
+                    e);
+        }
     }
 }

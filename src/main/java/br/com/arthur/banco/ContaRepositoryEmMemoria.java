@@ -29,4 +29,11 @@ public class ContaRepositoryEmMemoria
         return List.copyOf(
                 contas.values());
     }
+
+    @Override
+    public void salvarTodas(List<ContaBancaria> contas) {
+        for (ContaBancaria conta : contas) {
+            salvar(conta);
+        }
+    }
 }

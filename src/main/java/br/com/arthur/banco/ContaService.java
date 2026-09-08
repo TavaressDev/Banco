@@ -69,8 +69,8 @@ public class ContaService {
                                 contaDestino,
                                 valor);
 
-                repository.salvar(contaOrigem);
-                repository.salvar(contaDestino);
+                repository.salvarTodas(
+                                List.of(contaOrigem, contaDestino));
         }
 
         public void sacar(
