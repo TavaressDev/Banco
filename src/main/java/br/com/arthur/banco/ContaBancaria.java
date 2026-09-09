@@ -142,4 +142,21 @@ public abstract class ContaBancaria {
     public int hashCode() {
         return numero.hashCode();
     }
+
+    void reidratarHistorico(
+            List<Transacao> transacoes) {
+        if (transacoes == null) {
+            throw new IllegalArgumentException(
+                    "Histórico não pode ser nulo.");
+        }
+
+        if (transacoes.stream().anyMatch(
+                transacao -> transacao == null)) {
+            throw new IllegalArgumentException(
+                    "Histórico não pode conter transações nulas.");
+        }
+
+        transacaosHistorico.clear();
+        transacaosHistorico.addAll(transacoes);
+    }
 }

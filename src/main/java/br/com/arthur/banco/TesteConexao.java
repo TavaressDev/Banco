@@ -11,19 +11,24 @@ public class TesteConexao {
                                 .orElseThrow();
 
                 System.out.println(
-                                "Saldo antes: "
-                                                + conta.getSaldo());
-
-                conta.depositar(50);
-
-                repository.salvar(conta);
-
-                ContaBancaria contaDepois = repository
-                                .buscarPorNumero("004")
-                                .orElseThrow();
+                                "Saldo: " + conta.getSaldo());
 
                 System.out.println(
-                                "Saldo depois: "
-                                                + contaDepois.getSaldo());
+                                "Quantidade de transações: "
+                                                + conta
+                                                                .getTransacaosHistorico()
+                                                                .size());
+
+                for (Transacao transacao : conta.getTransacaosHistorico()) {
+
+                        System.out.println(
+                                        transacao.getId()
+                                                        + " | "
+                                                        + transacao.getTipo()
+                                                        + " | "
+                                                        + transacao.getValor()
+                                                        + " | "
+                                                        + transacao.getDataHoraFormatada());
+                }
         }
 }

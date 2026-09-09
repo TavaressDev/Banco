@@ -18,10 +18,12 @@ public class ContaRepositoryPostgres implements ContaRepository {
     private final String senha = "banco_password";
 
     @Override
-    public Optional<ContaBancaria> buscarPorNumero(String numero) {
+    public Optional<ContaBancaria> buscarPorNumero(
+            String numero) {
 
         String sql = """
                 SELECT
+                    id,
                     numero,
                     titular,
                     tipo,
@@ -31,11 +33,17 @@ public class ContaRepositoryPostgres implements ContaRepository {
                 """;
 
         try (
-                Connection connection = DriverManager.getConnection(url, usuario, senha);
+                Connection connection = DriverManager.getConnection(
+                        url,
+                        usuario,
+                        senha);
 
                 PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, numero);
+
+            ContaBancaria conta;
+            long contaId;
 
             try (
                     ResultSet resultado = statement.executeQuery()) {
@@ -44,12 +52,22 @@ public class ContaRepositoryPostgres implements ContaRepository {
                     return Optional.empty();
                 }
 
-                ContaBancaria conta = mapearConta(resultado);
+                contaId = resultado.getLong("id");
 
-                return Optional.of(conta);
+                conta = mapearConta(resultado);
             }
 
+            List<Transacao> transacoes = buscarTransacoes(
+                    connection,
+                    contaId);
+
+            conta.reidratarHistorico(
+                    transacoes);
+
+            return Optional.of(conta);
+
         } catch (SQLException e) {
+
             throw new RuntimeException(
                     "Erro ao buscar conta no banco",
                     e);
@@ -329,5 +347,50 @@ public class ContaRepositoryPostgres implements ContaRepository {
                     "Erro ao salvar contas no banco",
                     e);
         }
+    }
+
+    private List<Transacao> buscarTransacoes(
+            Connection connection,
+            long contaId) throws SQLException {
+
+        String sql = """
+                SELECT
+                    identificador,
+                    tipo,
+                    valor,
+                    data_hora
+                FROM transacoes
+                WHERE conta_id = ?
+                ORDER BY data_hora, id
+                """;
+
+        List<Transacao> transacoes = new ArrayList<>();
+
+        try (
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, contaId);
+
+            try (
+                    ResultSet resultado = statement.executeQuery()) {
+
+                while (resultado.next()) {
+
+                    Transacao transacao = Transacao.reidratar(
+                            resultado.getObject(
+                                    "identificador",
+                                    java.util.UUID.class),
+                            TipoTransacao.valueOf(
+                                    resultado.getString("tipo")),
+                            resultado.getDouble("valor"),
+                            resultado.getTimestamp(
+                                    "data_hora").toLocalDateTime());
+
+                    transacoes.add(transacao);
+                }
+            }
+        }
+
+        return transacoes;
     }
 }
