@@ -80,9 +80,8 @@ public class ContaRepositoryPostgres implements ContaRepository {
             return Optional.of(conta);
 
         } catch (SQLException e) {
-
-            throw new RuntimeException(
-                    "Erro ao buscar conta no banco",
+            throw new PersistenciaException(
+                    "Erro ao salvar conta no banco",
                     e);
         }
     }
@@ -115,8 +114,7 @@ public class ContaRepositoryPostgres implements ContaRepository {
             }
 
         } catch (SQLException e) {
-
-            throw new RuntimeException(
+            throw new PersistenciaException(
                     "Erro ao salvar conta no banco",
                     e);
         }
@@ -222,9 +220,8 @@ public class ContaRepositoryPostgres implements ContaRepository {
                     contas.values());
 
         } catch (SQLException e) {
-
-            throw new RuntimeException(
-                    "Erro ao listar contas do banco",
+            throw new PersistenciaException(
+                    "Erro ao salvar conta no banco",
                     e);
         }
     }
@@ -420,9 +417,8 @@ public class ContaRepositoryPostgres implements ContaRepository {
             }
 
         } catch (SQLException e) {
-
-            throw new RuntimeException(
-                    "Erro ao salvar contas no banco",
+            throw new PersistenciaException(
+                    "Erro ao salvar conta no banco",
                     e);
         }
     }
