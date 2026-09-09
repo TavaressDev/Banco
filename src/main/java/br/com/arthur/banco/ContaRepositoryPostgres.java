@@ -14,11 +14,21 @@ import java.util.UUID;
 
 public class ContaRepositoryPostgres implements ContaRepository {
 
-    private final String url = "jdbc:postgresql://localhost:5433/sistema_bancario";
+    private final String url;
+    private final String usuario;
+    private final String senha;
 
-    private final String usuario = "banco_user";
+    public ContaRepositoryPostgres(
+            DatabaseConfig config) {
+        if (config == null) {
+            throw new IllegalArgumentException(
+                    "Configuração do banco não pode ser nula.");
+        }
 
-    private final String senha = "banco_password";
+        this.url = config.getUrl();
+        this.usuario = config.getUsuario();
+        this.senha = config.getSenha();
+    }
 
     @Override
     public Optional<ContaBancaria> buscarPorNumero(

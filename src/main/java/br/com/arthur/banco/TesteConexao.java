@@ -4,20 +4,19 @@ public class TesteConexao {
 
         public static void main(String[] args) {
 
-                ContaRepository repository = new ContaRepositoryPostgres();
+                DatabaseConfig config = DatabaseConfig.fromEnvironment();
 
-                for (ContaBancaria conta : repository.listarTodas()) {
+                ContaRepository repository = new ContaRepositoryPostgres(config);
 
-                        System.out.println(
-                                        conta.getNumero()
-                                                        + " | "
-                                                        + conta.getTitular()
-                                                        + " | "
-                                                        + conta.getSaldo()
-                                                        + " | transações: "
-                                                        + conta
-                                                                        .getTransacaosHistorico()
-                                                                        .size());
-                }
+                ContaBancaria conta = repository
+                                .buscarPorNumero("004")
+                                .orElseThrow();
+
+                System.out.println(
+                                conta.getNumero()
+                                                + " | "
+                                                + conta.getTitular()
+                                                + " | "
+                                                + conta.getSaldo());
         }
 }
