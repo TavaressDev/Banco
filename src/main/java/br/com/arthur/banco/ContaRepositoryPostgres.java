@@ -65,7 +65,22 @@ public class ContaRepositoryPostgres implements ContaRepository {
                         usuario,
                         senha)) {
 
-            salvar(connection, conta);
+            connection.setAutoCommit(false);
+
+            try {
+
+                salvar(
+                        connection,
+                        conta);
+
+                connection.commit();
+
+            } catch (Exception e) {
+
+                connection.rollback();
+
+                throw e;
+            }
 
         } catch (SQLException e) {
 
@@ -73,6 +88,20 @@ public class ContaRepositoryPostgres implements ContaRepository {
                     "Erro ao salvar conta no banco",
                     e);
         }
+    }
+
+    private void salvar(
+            Connection connection,
+            ContaBancaria conta) throws SQLException {
+
+        long contaId = salvarConta(
+                connection,
+                conta);
+
+        salvarTransacoes(
+                connection,
+                contaId,
+                conta);
     }
 
     @Override
@@ -148,7 +177,7 @@ public class ContaRepositoryPostgres implements ContaRepository {
         };
     }
 
-    private void salvar(
+    private long salvarConta(
             Connection connection,
             ContaBancaria conta) throws SQLException {
 
@@ -166,14 +195,18 @@ public class ContaRepositoryPostgres implements ContaRepository {
                     titular = EXCLUDED.titular,
                     tipo = EXCLUDED.tipo,
                     saldo = EXCLUDED.saldo
+
+                RETURNING id
                 """;
 
         String tipo;
 
         if (conta instanceof ContaCorrente) {
             tipo = "CORRENTE";
+
         } else if (conta instanceof ContaPoupanca) {
             tipo = "POUPANCA";
+
         } else {
             throw new IllegalArgumentException(
                     "Tipo de conta não suportado: "
@@ -199,7 +232,65 @@ public class ContaRepositoryPostgres implements ContaRepository {
                     4,
                     conta.getSaldo());
 
-            statement.executeUpdate();
+            try (
+                    ResultSet resultado = statement.executeQuery()) {
+
+                if (!resultado.next()) {
+                    throw new SQLException(
+                            "Não foi possível obter o ID da conta.");
+                }
+
+                return resultado.getLong("id");
+            }
+        }
+    }
+
+    private void salvarTransacoes(
+            Connection connection,
+            long contaId,
+            ContaBancaria conta) throws SQLException {
+
+        String sql = """
+                INSERT INTO transacoes (
+                    identificador,
+                    conta_id,
+                    tipo,
+                    valor,
+                    data_hora
+                )
+                VALUES (?, ?, ?, ?, ?)
+
+                ON CONFLICT (identificador)
+                DO NOTHING
+                """;
+
+        try (
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            for (Transacao transacao : conta.getTransacaosHistorico()) {
+
+                statement.setObject(
+                        1,
+                        transacao.getId());
+
+                statement.setLong(
+                        2,
+                        contaId);
+
+                statement.setString(
+                        3,
+                        transacao.getTipo().name());
+
+                statement.setDouble(
+                        4,
+                        transacao.getValor());
+
+                statement.setObject(
+                        5,
+                        transacao.getDataHora());
+
+                statement.executeUpdate();
+            }
         }
     }
 
@@ -218,7 +309,9 @@ public class ContaRepositoryPostgres implements ContaRepository {
             try {
 
                 for (ContaBancaria conta : contas) {
-                    salvar(connection, conta);
+                    salvar(
+                            connection,
+                            conta);
                 }
 
                 connection.commit();
