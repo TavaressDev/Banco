@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="br.com.arthur.banco.ContaResumoTest" time="0.007" tests="3" errors="0" skipped="0" failures="0" flakes="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="3.792" tests="4" errors="0" skipped="0" failures="0" flakes="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -58,7 +58,66 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="deveLancarExcecaoQuandoNumeroForInvalido" classname="br.com.arthur.banco.ContaResumoTest" time="0.001"/>
-  <testcase name="deveLancarExcecaoQuandoTitularForInvalido" classname="br.com.arthur.banco.ContaResumoTest" time="0.002"/>
-  <testcase name="deveLancarExcecaoQuandoSaldoForNegativo" classname="br.com.arthur.banco.ContaResumoTest" time="0.002"/>
+  <testcase name="naoDeveDuplicarTransacoesAoSalvarContaNovamente" classname="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="0.531">
+    <system-err><![CDATA[SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+SLF4J: Failed to load class "org.slf4j.impl.StaticMDCBinder".
+SLF4J: Defaulting to no-operation MDCAdapter implementation.
+SLF4J: See http://www.slf4j.org/codes.html#no_static_mdc_binder for further details.
+set. 09, 2026 12:38:27 PM org.flywaydb.core.FlywayExecutor init
+INFORMAÇÕES: Database: ******** (PostgreSQL 17.11)
+set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory allAppliedMigrations
+INFORMAÇÕES: Schema history table "public"."flyway_schema_history" does not exist yet
+set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbValidate validate
+INFORMAÇÕES: Successfully validated 3 migrations (execution time 00:00.019s)
+set. 09, 2026 12:38:27 PM org.flywaydb.core.Flyway lambda$migrate$2
+INFORMAÇÕES: All configured schemas are empty; a baseline marker will not be added to Flyway's schema history table. A baseline or migration script with a lower version than the baseline version may execute if available. Check the Schemas parameter if this is not intended. See https://help.red-gate.com/help/flyway-cli13/help_5.aspx?topic=baseline-on-migrate for more info
+set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory create
+INFORMAÇÕES: Creating Schema History table "public"."flyway_schema_history" ...
+set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate migrateGroup
+INFORMAÇÕES: Current version of schema "public": << Empty Schema >>
+set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
+INFORMAÇÕES: Migrating schema "public" to version "1 - baseline schema"
+set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
+INFORMAÇÕES: Migrating schema "public" to version "2 - create index transacoes conta id"
+set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
+INFORMAÇÕES: Migrating schema "public" to version "3 - create index transacoes data hora"
+set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate logSummary
+INFORMAÇÕES: Successfully applied 3 migrations to schema "public", now at version v3 (execution time 00:00.024s)
+]]></system-err>
+  </testcase>
+  <testcase name="deveSalvarEBuscarContaNoPostgres" classname="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="0.073">
+    <system-err><![CDATA[set. 09, 2026 12:38:27 PM org.flywaydb.core.FlywayExecutor init
+INFORMAÇÕES: Database: ******** (PostgreSQL 17.11)
+set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbValidate validate
+INFORMAÇÕES: Successfully validated 3 migrations (execution time 00:00.005s)
+set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate migrateGroup
+INFORMAÇÕES: Current version of schema "public": 3
+set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate logSummary
+INFORMAÇÕES: Schema "public" is up to date. No migration necessary.
+]]></system-err>
+  </testcase>
+  <testcase name="deveFazerRollbackQuandoUmaDasContasFalhar" classname="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="0.098">
+    <system-err><![CDATA[set. 09, 2026 12:38:28 PM org.flywaydb.core.FlywayExecutor init
+INFORMAÇÕES: Database: ******** (PostgreSQL 17.11)
+set. 09, 2026 12:38:28 PM org.flywaydb.core.internal.command.DbValidate validate
+INFORMAÇÕES: Successfully validated 3 migrations (execution time 00:00.006s)
+set. 09, 2026 12:38:28 PM org.flywaydb.core.internal.command.DbMigrate migrateGroup
+INFORMAÇÕES: Current version of schema "public": 3
+set. 09, 2026 12:38:28 PM org.flywaydb.core.internal.command.DbMigrate logSummary
+INFORMAÇÕES: Schema "public" is up to date. No migration necessary.
+]]></system-err>
+  </testcase>
+  <testcase name="devePersistirEReidratarHistoricoDeTransacoes" classname="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="0.074">
+    <system-err><![CDATA[set. 09, 2026 12:38:28 PM org.flywaydb.core.FlywayExecutor init
+INFORMAÇÕES: Database: ******** (PostgreSQL 17.11)
+set. 09, 2026 12:38:28 PM org.flywaydb.core.internal.command.DbValidate validate
+INFORMAÇÕES: Successfully validated 3 migrations (execution time 00:00.005s)
+set. 09, 2026 12:38:28 PM org.flywaydb.core.internal.command.DbMigrate migrateGroup
+INFORMAÇÕES: Current version of schema "public": 3
+set. 09, 2026 12:38:28 PM org.flywaydb.core.internal.command.DbMigrate logSummary
+INFORMAÇÕES: Schema "public" is up to date. No migration necessary.
+]]></system-err>
+  </testcase>
 </testsuite>
