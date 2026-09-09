@@ -6,29 +6,18 @@ public class TesteConexao {
 
                 ContaRepository repository = new ContaRepositoryPostgres();
 
-                ContaBancaria conta = repository
-                                .buscarPorNumero("004")
-                                .orElseThrow();
-
-                System.out.println(
-                                "Saldo: " + conta.getSaldo());
-
-                System.out.println(
-                                "Quantidade de transações: "
-                                                + conta
-                                                                .getTransacaosHistorico()
-                                                                .size());
-
-                for (Transacao transacao : conta.getTransacaosHistorico()) {
+                for (ContaBancaria conta : repository.listarTodas()) {
 
                         System.out.println(
-                                        transacao.getId()
+                                        conta.getNumero()
                                                         + " | "
-                                                        + transacao.getTipo()
+                                                        + conta.getTitular()
                                                         + " | "
-                                                        + transacao.getValor()
-                                                        + " | "
-                                                        + transacao.getDataHoraFormatada());
+                                                        + conta.getSaldo()
+                                                        + " | transações: "
+                                                        + conta
+                                                                        .getTransacaosHistorico()
+                                                                        .size());
                 }
         }
 }

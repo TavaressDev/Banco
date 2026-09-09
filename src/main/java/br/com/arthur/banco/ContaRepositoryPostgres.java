@@ -6,8 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class ContaRepositoryPostgres implements ContaRepository {
 
@@ -26,7 +29,7 @@ public class ContaRepositoryPostgres implements ContaRepository {
                     id,
                     numero,
                     titular,
-                    tipo,
+                    tipo AS conta_tipo,
                     saldo
                 FROM contas
                 WHERE numero = ?
@@ -75,7 +78,8 @@ public class ContaRepositoryPostgres implements ContaRepository {
     }
 
     @Override
-    public void salvar(ContaBancaria conta) {
+    public void salvar(
+            ContaBancaria conta) {
 
         try (
                 Connection connection = DriverManager.getConnection(
@@ -110,7 +114,8 @@ public class ContaRepositoryPostgres implements ContaRepository {
 
     private void salvar(
             Connection connection,
-            ContaBancaria conta) throws SQLException {
+            ContaBancaria conta)
+            throws SQLException {
 
         long contaId = salvarConta(
                 connection,
@@ -127,15 +132,31 @@ public class ContaRepositoryPostgres implements ContaRepository {
 
         String sql = """
                 SELECT
-                    numero,
-                    titular,
-                    tipo,
-                    saldo
-                FROM contas
-                ORDER BY id
+                    c.id AS conta_id,
+                    c.numero,
+                    c.titular,
+                    c.tipo AS conta_tipo,
+                    c.saldo,
+
+                    t.identificador,
+                    t.tipo AS transacao_tipo,
+                    t.valor,
+                    t.data_hora
+
+                FROM contas c
+
+                LEFT JOIN transacoes t
+                    ON t.conta_id = c.id
+
+                ORDER BY
+                    c.id,
+                    t.data_hora,
+                    t.id
                 """;
 
-        List<ContaBancaria> contas = new ArrayList<>();
+        Map<Long, ContaBancaria> contas = new LinkedHashMap<>();
+
+        Map<Long, List<Transacao>> historicos = new LinkedHashMap<>();
 
         try (
                 Connection connection = DriverManager.getConnection(
@@ -149,12 +170,46 @@ public class ContaRepositoryPostgres implements ContaRepository {
 
             while (resultado.next()) {
 
-                ContaBancaria conta = mapearConta(resultado);
+                long contaId = resultado.getLong("conta_id");
 
-                contas.add(conta);
+                if (!contas.containsKey(contaId)) {
+
+                    ContaBancaria conta = mapearConta(resultado);
+
+                    contas.put(
+                            contaId,
+                            conta);
+
+                    historicos.put(
+                            contaId,
+                            new ArrayList<>());
+                }
+
+                Object identificador = resultado.getObject(
+                        "identificador");
+
+                if (identificador != null) {
+
+                    Transacao transacao = mapearTransacao(resultado);
+
+                    historicos
+                            .get(contaId)
+                            .add(transacao);
+                }
             }
 
-            return contas;
+            for (Map.Entry<Long, ContaBancaria> entry : contas.entrySet()) {
+
+                long contaId = entry.getKey();
+
+                ContaBancaria conta = entry.getValue();
+
+                conta.reidratarHistorico(
+                        historicos.get(contaId));
+            }
+
+            return new ArrayList<>(
+                    contas.values());
 
         } catch (SQLException e) {
 
@@ -165,13 +220,14 @@ public class ContaRepositoryPostgres implements ContaRepository {
     }
 
     private ContaBancaria mapearConta(
-            ResultSet resultado) throws SQLException {
+            ResultSet resultado)
+            throws SQLException {
 
         String numero = resultado.getString("numero");
 
         String titular = resultado.getString("titular");
 
-        String tipo = resultado.getString("tipo");
+        String tipo = resultado.getString("conta_tipo");
 
         double saldo = resultado.getDouble("saldo");
 
@@ -191,13 +247,15 @@ public class ContaRepositoryPostgres implements ContaRepository {
 
             default ->
                 throw new IllegalStateException(
-                        "Tipo de conta desconhecido: " + tipo);
+                        "Tipo de conta desconhecido: "
+                                + tipo);
         };
     }
 
     private long salvarConta(
             Connection connection,
-            ContaBancaria conta) throws SQLException {
+            ContaBancaria conta)
+            throws SQLException {
 
         String sql = """
                 INSERT INTO contas (
@@ -220,15 +278,20 @@ public class ContaRepositoryPostgres implements ContaRepository {
         String tipo;
 
         if (conta instanceof ContaCorrente) {
+
             tipo = "CORRENTE";
 
         } else if (conta instanceof ContaPoupanca) {
+
             tipo = "POUPANCA";
 
         } else {
+
             throw new IllegalArgumentException(
                     "Tipo de conta não suportado: "
-                            + conta.getClass().getSimpleName());
+                            + conta
+                                    .getClass()
+                                    .getSimpleName());
         }
 
         try (
@@ -254,6 +317,7 @@ public class ContaRepositoryPostgres implements ContaRepository {
                     ResultSet resultado = statement.executeQuery()) {
 
                 if (!resultado.next()) {
+
                     throw new SQLException(
                             "Não foi possível obter o ID da conta.");
                 }
@@ -266,7 +330,8 @@ public class ContaRepositoryPostgres implements ContaRepository {
     private void salvarTransacoes(
             Connection connection,
             long contaId,
-            ContaBancaria conta) throws SQLException {
+            ContaBancaria conta)
+            throws SQLException {
 
         String sql = """
                 INSERT INTO transacoes (
@@ -297,7 +362,9 @@ public class ContaRepositoryPostgres implements ContaRepository {
 
                 statement.setString(
                         3,
-                        transacao.getTipo().name());
+                        transacao
+                                .getTipo()
+                                .name());
 
                 statement.setDouble(
                         4,
@@ -327,6 +394,7 @@ public class ContaRepositoryPostgres implements ContaRepository {
             try {
 
                 for (ContaBancaria conta : contas) {
+
                     salvar(
                             connection,
                             conta);
@@ -351,7 +419,8 @@ public class ContaRepositoryPostgres implements ContaRepository {
 
     private List<Transacao> buscarTransacoes(
             Connection connection,
-            long contaId) throws SQLException {
+            long contaId)
+            throws SQLException {
 
         String sql = """
                 SELECT
@@ -369,28 +438,66 @@ public class ContaRepositoryPostgres implements ContaRepository {
         try (
                 PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setLong(1, contaId);
+            statement.setLong(
+                    1,
+                    contaId);
 
             try (
                     ResultSet resultado = statement.executeQuery()) {
 
                 while (resultado.next()) {
 
-                    Transacao transacao = Transacao.reidratar(
-                            resultado.getObject(
-                                    "identificador",
-                                    java.util.UUID.class),
-                            TipoTransacao.valueOf(
-                                    resultado.getString("tipo")),
-                            resultado.getDouble("valor"),
-                            resultado.getTimestamp(
-                                    "data_hora").toLocalDateTime());
+                    UUID identificador = resultado.getObject(
+                            "identificador",
+                            UUID.class);
 
-                    transacoes.add(transacao);
+                    TipoTransacao tipo = TipoTransacao.valueOf(
+                            resultado.getString(
+                                    "tipo"));
+
+                    double valor = resultado.getDouble(
+                            "valor");
+
+                    Transacao transacao = Transacao.reidratar(
+                            identificador,
+                            tipo,
+                            valor,
+                            resultado
+                                    .getTimestamp(
+                                            "data_hora")
+                                    .toLocalDateTime());
+
+                    transacoes.add(
+                            transacao);
                 }
             }
         }
 
         return transacoes;
+    }
+
+    private Transacao mapearTransacao(
+            ResultSet resultado)
+            throws SQLException {
+
+        UUID identificador = resultado.getObject(
+                "identificador",
+                UUID.class);
+
+        TipoTransacao tipo = TipoTransacao.valueOf(
+                resultado.getString(
+                        "transacao_tipo"));
+
+        double valor = resultado.getDouble(
+                "valor");
+
+        return Transacao.reidratar(
+                identificador,
+                tipo,
+                valor,
+                resultado
+                        .getTimestamp(
+                                "data_hora")
+                        .toLocalDateTime());
     }
 }
