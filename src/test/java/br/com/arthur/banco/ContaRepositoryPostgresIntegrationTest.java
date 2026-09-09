@@ -1,15 +1,20 @@
 package br.com.arthur.banco;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import com.zaxxer.hikari.HikariDataSource;
 
 @Testcontainers
 class ContaRepositoryPostgresIntegrationTest {
@@ -19,6 +24,8 @@ class ContaRepositoryPostgresIntegrationTest {
             .withDatabaseName("sistema_bancario_test")
             .withUsername("test_user")
             .withPassword("test_password");
+
+    private HikariDataSource dataSource;
 
     private ContaRepository repository;
 
@@ -30,9 +37,53 @@ class ContaRepositoryPostgresIntegrationTest {
                 postgres.getUsername(),
                 postgres.getPassword());
 
-        DatabaseMigration.migrate(config);
+        dataSource = DatabaseDataSource.criar(config);
 
-        repository = new ContaRepositoryPostgres(config);
+        DatabaseMigration.migrate(
+                dataSource);
+
+        repository = new ContaRepositoryPostgres(
+                dataSource);
+    }
+
+    @AfterEach
+    void tearDown() {
+
+        if (dataSource != null) {
+            dataSource.close();
+        }
+    }
+
+    @Test
+    void deveSalvarEBuscarContaNoPostgres() {
+
+        ContaBancaria conta = new ContaCorrente(
+                "Arthur",
+                "999");
+
+        conta.depositar(500);
+
+        repository.salvar(conta);
+
+        var resultado = repository.buscarPorNumero(
+                "999");
+
+        assertTrue(
+                resultado.isPresent());
+
+        ContaBancaria contaEncontrada = resultado.orElseThrow();
+
+        assertEquals(
+                "999",
+                contaEncontrada.getNumero());
+
+        assertEquals(
+                "Arthur",
+                contaEncontrada.getTitular());
+
+        assertEquals(
+                500.0,
+                contaEncontrada.getSaldo());
     }
 
     @Test
@@ -84,36 +135,6 @@ class ContaRepositoryPostgresIntegrationTest {
     }
 
     @Test
-    void deveSalvarEBuscarContaNoPostgres() {
-
-        ContaBancaria conta = new ContaCorrente(
-                "Arthur",
-                "999");
-
-        conta.depositar(500);
-
-        repository.salvar(conta);
-
-        var resultado = repository.buscarPorNumero("999");
-
-        assertTrue(resultado.isPresent());
-
-        ContaBancaria contaEncontrada = resultado.orElseThrow();
-
-        assertEquals(
-                "999",
-                contaEncontrada.getNumero());
-
-        assertEquals(
-                "Arthur",
-                contaEncontrada.getTitular());
-
-        assertEquals(
-                500.0,
-                contaEncontrada.getSaldo());
-    }
-
-    @Test
     void naoDeveDuplicarTransacoesAoSalvarContaNovamente() {
 
         ContaBancaria conta = new ContaCorrente(
@@ -161,7 +182,7 @@ class ContaRepositoryPostgresIntegrationTest {
         assertThrows(
                 PersistenciaException.class,
                 () -> repository.salvarTodas(
-                        java.util.List.of(
+                        List.of(
                                 contaValida,
                                 contaInvalidaParaOBanco)));
 

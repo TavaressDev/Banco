@@ -1,24 +1,32 @@
 package br.com.arthur.banco;
 
+import com.zaxxer.hikari.HikariDataSource;
+
 public class TesteConexao {
 
         public static void main(String[] args) {
 
                 DatabaseConfig config = DatabaseConfig.fromEnvironment();
 
-                DatabaseMigration.migrate(config);
+                try (
+                                HikariDataSource dataSource = DatabaseDataSource.criar(config)) {
 
-                ContaRepository repository = new ContaRepositoryPostgres(config);
+                        DatabaseMigration.migrate(
+                                        dataSource);
 
-                ContaBancaria conta = repository
-                                .buscarPorNumero("004")
-                                .orElseThrow();
+                        ContaRepository repository = new ContaRepositoryPostgres(
+                                        dataSource);
 
-                System.out.println(
-                                conta.getNumero()
-                                                + " | "
-                                                + conta.getTitular()
-                                                + " | "
-                                                + conta.getSaldo());
+                        ContaBancaria conta = repository
+                                        .buscarPorNumero("004")
+                                        .orElseThrow();
+
+                        System.out.println(
+                                        conta.getNumero()
+                                                        + " | "
+                                                        + conta.getTitular()
+                                                        + " | "
+                                                        + conta.getSaldo());
+                }
         }
 }

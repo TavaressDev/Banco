@@ -19,6 +19,7 @@ br/com/arthur/banco/ContaCorrente.class
 br/com/arthur/banco/ContaService.class
 br/com/arthur/banco/CalculadoraPeriodo.class
 br/com/arthur/banco/ContaRepositoryPostgres.class
+br/com/arthur/banco/DatabaseDataSource.class
 br/com/arthur/banco/Caixa.class
 br/com/arthur/banco/ArquivoService.class
 br/com/arthur/banco/ContaNaoRendivelException.class

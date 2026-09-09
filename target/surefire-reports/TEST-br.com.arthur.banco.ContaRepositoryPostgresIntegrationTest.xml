@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="3.792" tests="4" errors="0" skipped="0" failures="0" flakes="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="3.91" tests="4" errors="0" skipped="0" failures="0" flakes="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
-    <property name="java.class.path" value="/home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/test-classes:/home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/classes:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter/5.13.1/junit-jupiter-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.13.1/junit-jupiter-api-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/megamortalgamer/.m2/repository/org/junit/platform/junit-platform-commons/1.13.1/junit-platform-commons-1.13.1.jar:/home/megamortalgamer/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.13.1/junit-jupiter-params-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.13.1/junit-jupiter-engine-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/junit/platform/junit-platform-engine/1.13.1/junit-platform-engine-1.13.1.jar:/home/megamortalgamer/.m2/repository/org/postgresql/postgresql/42.7.13/postgresql-42.7.13.jar:/home/megamortalgamer/.m2/repository/org/checkerframework/checker-qual/3.55.1/checker-qual-3.55.1.jar:/home/megamortalgamer/.m2/repository/org/flywaydb/flyway-core/13.5.0/flyway-core-13.5.0.jar:/home/megamortalgamer/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.22/jackson-annotations-2.22.jar:/home/megamortalgamer/.m2/repository/org/flywaydb/flyway-database-postgresql/13.5.0/flyway-database-postgresql-13.5.0.jar:/home/megamortalgamer/.m2/repository/org/flywaydb/flyway-database-cockroachdb/13.5.0/flyway-database-cockroachdb-13.5.0.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-postgresql/2.0.5/testcontainers-postgresql-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-jdbc/2.0.5/testcontainers-jdbc-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-database-commons/2.0.5/testcontainers-database-commons-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-junit-jupiter/2.0.5/testcontainers-junit-jupiter-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers/2.0.5/testcontainers-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:/home/megamortalgamer/.m2/repository/org/apache/commons/commons-compress/1.28.0/commons-compress-1.28.0.jar:/home/megamortalgamer/.m2/repository/commons-codec/commons-codec/1.19.0/commons-codec-1.19.0.jar:/home/megamortalgamer/.m2/repository/commons-io/commons-io/2.20.0/commons-io-2.20.0.jar:/home/megamortalgamer/.m2/repository/org/apache/commons/commons-lang3/3.18.0/commons-lang3-3.18.0.jar:/home/megamortalgamer/.m2/repository/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar:/home/megamortalgamer/.m2/repository/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar:/home/megamortalgamer/.m2/repository/com/github/docker-java/docker-java-api/3.7.1/docker-java-api-3.7.1.jar:/home/megamortalgamer/.m2/repository/com/github/docker-java/docker-java-transport-zerodep/3.7.1/docker-java-transport-zerodep-3.7.1.jar:/home/megamortalgamer/.m2/repository/com/github/docker-java/docker-java-transport/3.7.1/docker-java-transport-3.7.1.jar:/home/megamortalgamer/.m2/repository/net/java/dev/jna/jna/5.18.1/jna-5.18.1.jar:"/>
+    <property name="java.class.path" value="/home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/test-classes:/home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/classes:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter/5.13.1/junit-jupiter-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.13.1/junit-jupiter-api-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/megamortalgamer/.m2/repository/org/junit/platform/junit-platform-commons/1.13.1/junit-platform-commons-1.13.1.jar:/home/megamortalgamer/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.13.1/junit-jupiter-params-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.13.1/junit-jupiter-engine-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/junit/platform/junit-platform-engine/1.13.1/junit-platform-engine-1.13.1.jar:/home/megamortalgamer/.m2/repository/org/postgresql/postgresql/42.7.13/postgresql-42.7.13.jar:/home/megamortalgamer/.m2/repository/org/checkerframework/checker-qual/3.55.1/checker-qual-3.55.1.jar:/home/megamortalgamer/.m2/repository/org/flywaydb/flyway-core/13.5.0/flyway-core-13.5.0.jar:/home/megamortalgamer/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.22/jackson-annotations-2.22.jar:/home/megamortalgamer/.m2/repository/org/flywaydb/flyway-database-postgresql/13.5.0/flyway-database-postgresql-13.5.0.jar:/home/megamortalgamer/.m2/repository/org/flywaydb/flyway-database-cockroachdb/13.5.0/flyway-database-cockroachdb-13.5.0.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-postgresql/2.0.5/testcontainers-postgresql-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-jdbc/2.0.5/testcontainers-jdbc-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-database-commons/2.0.5/testcontainers-database-commons-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-junit-jupiter/2.0.5/testcontainers-junit-jupiter-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers/2.0.5/testcontainers-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/apache/commons/commons-compress/1.28.0/commons-compress-1.28.0.jar:/home/megamortalgamer/.m2/repository/commons-codec/commons-codec/1.19.0/commons-codec-1.19.0.jar:/home/megamortalgamer/.m2/repository/commons-io/commons-io/2.20.0/commons-io-2.20.0.jar:/home/megamortalgamer/.m2/repository/org/apache/commons/commons-lang3/3.18.0/commons-lang3-3.18.0.jar:/home/megamortalgamer/.m2/repository/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar:/home/megamortalgamer/.m2/repository/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar:/home/megamortalgamer/.m2/repository/com/github/docker-java/docker-java-api/3.7.1/docker-java-api-3.7.1.jar:/home/megamortalgamer/.m2/repository/com/github/docker-java/docker-java-transport-zerodep/3.7.1/docker-java-transport-zerodep-3.7.1.jar:/home/megamortalgamer/.m2/repository/com/github/docker-java/docker-java-transport/3.7.1/docker-java-transport-3.7.1.jar:/home/megamortalgamer/.m2/repository/net/java/dev/jna/jna/5.18.1/jna-5.18.1.jar:/home/megamortalgamer/.m2/repository/com/zaxxer/HikariCP/7.1.0/HikariCP-7.1.0.jar:/home/megamortalgamer/.m2/repository/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar:"/>
     <property name="java.vm.vendor" value="Ubuntu"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.vendor.url" value="https://ubuntu.com/"/>
@@ -13,9 +13,9 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="BR"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-21-openjdk-amd64/lib"/>
-    <property name="sun.java.command" value="/home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/surefire/surefirebooter-20260909123823406_3.jar /home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/surefire 2026-09-09T12-38-23_291-jvmRun1 surefire-20260909123823406_1tmp surefire_0-20260909123823406_2tmp"/>
+    <property name="sun.java.command" value="/home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/surefire/surefirebooter-20260909125541336_3.jar /home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/surefire 2026-09-09T12-55-41_221-jvmRun1 surefire-20260909125541336_1tmp surefire_0-20260909125541336_2tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="/home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/test-classes:/home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/classes:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter/5.13.1/junit-jupiter-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.13.1/junit-jupiter-api-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/megamortalgamer/.m2/repository/org/junit/platform/junit-platform-commons/1.13.1/junit-platform-commons-1.13.1.jar:/home/megamortalgamer/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.13.1/junit-jupiter-params-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.13.1/junit-jupiter-engine-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/junit/platform/junit-platform-engine/1.13.1/junit-platform-engine-1.13.1.jar:/home/megamortalgamer/.m2/repository/org/postgresql/postgresql/42.7.13/postgresql-42.7.13.jar:/home/megamortalgamer/.m2/repository/org/checkerframework/checker-qual/3.55.1/checker-qual-3.55.1.jar:/home/megamortalgamer/.m2/repository/org/flywaydb/flyway-core/13.5.0/flyway-core-13.5.0.jar:/home/megamortalgamer/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.22/jackson-annotations-2.22.jar:/home/megamortalgamer/.m2/repository/org/flywaydb/flyway-database-postgresql/13.5.0/flyway-database-postgresql-13.5.0.jar:/home/megamortalgamer/.m2/repository/org/flywaydb/flyway-database-cockroachdb/13.5.0/flyway-database-cockroachdb-13.5.0.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-postgresql/2.0.5/testcontainers-postgresql-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-jdbc/2.0.5/testcontainers-jdbc-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-database-commons/2.0.5/testcontainers-database-commons-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-junit-jupiter/2.0.5/testcontainers-junit-jupiter-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers/2.0.5/testcontainers-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:/home/megamortalgamer/.m2/repository/org/apache/commons/commons-compress/1.28.0/commons-compress-1.28.0.jar:/home/megamortalgamer/.m2/repository/commons-codec/commons-codec/1.19.0/commons-codec-1.19.0.jar:/home/megamortalgamer/.m2/repository/commons-io/commons-io/2.20.0/commons-io-2.20.0.jar:/home/megamortalgamer/.m2/repository/org/apache/commons/commons-lang3/3.18.0/commons-lang3-3.18.0.jar:/home/megamortalgamer/.m2/repository/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar:/home/megamortalgamer/.m2/repository/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar:/home/megamortalgamer/.m2/repository/com/github/docker-java/docker-java-api/3.7.1/docker-java-api-3.7.1.jar:/home/megamortalgamer/.m2/repository/com/github/docker-java/docker-java-transport-zerodep/3.7.1/docker-java-transport-zerodep-3.7.1.jar:/home/megamortalgamer/.m2/repository/com/github/docker-java/docker-java-transport/3.7.1/docker-java-transport-3.7.1.jar:/home/megamortalgamer/.m2/repository/net/java/dev/jna/jna/5.18.1/jna-5.18.1.jar:"/>
+    <property name="surefire.test.class.path" value="/home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/test-classes:/home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/classes:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter/5.13.1/junit-jupiter-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.13.1/junit-jupiter-api-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/megamortalgamer/.m2/repository/org/junit/platform/junit-platform-commons/1.13.1/junit-platform-commons-1.13.1.jar:/home/megamortalgamer/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.13.1/junit-jupiter-params-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.13.1/junit-jupiter-engine-5.13.1.jar:/home/megamortalgamer/.m2/repository/org/junit/platform/junit-platform-engine/1.13.1/junit-platform-engine-1.13.1.jar:/home/megamortalgamer/.m2/repository/org/postgresql/postgresql/42.7.13/postgresql-42.7.13.jar:/home/megamortalgamer/.m2/repository/org/checkerframework/checker-qual/3.55.1/checker-qual-3.55.1.jar:/home/megamortalgamer/.m2/repository/org/flywaydb/flyway-core/13.5.0/flyway-core-13.5.0.jar:/home/megamortalgamer/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.22/jackson-annotations-2.22.jar:/home/megamortalgamer/.m2/repository/org/flywaydb/flyway-database-postgresql/13.5.0/flyway-database-postgresql-13.5.0.jar:/home/megamortalgamer/.m2/repository/org/flywaydb/flyway-database-cockroachdb/13.5.0/flyway-database-cockroachdb-13.5.0.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-postgresql/2.0.5/testcontainers-postgresql-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-jdbc/2.0.5/testcontainers-jdbc-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-database-commons/2.0.5/testcontainers-database-commons-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers-junit-jupiter/2.0.5/testcontainers-junit-jupiter-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/testcontainers/testcontainers/2.0.5/testcontainers-2.0.5.jar:/home/megamortalgamer/.m2/repository/org/apache/commons/commons-compress/1.28.0/commons-compress-1.28.0.jar:/home/megamortalgamer/.m2/repository/commons-codec/commons-codec/1.19.0/commons-codec-1.19.0.jar:/home/megamortalgamer/.m2/repository/commons-io/commons-io/2.20.0/commons-io-2.20.0.jar:/home/megamortalgamer/.m2/repository/org/apache/commons/commons-lang3/3.18.0/commons-lang3-3.18.0.jar:/home/megamortalgamer/.m2/repository/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar:/home/megamortalgamer/.m2/repository/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar:/home/megamortalgamer/.m2/repository/com/github/docker-java/docker-java-api/3.7.1/docker-java-api-3.7.1.jar:/home/megamortalgamer/.m2/repository/com/github/docker-java/docker-java-transport-zerodep/3.7.1/docker-java-transport-zerodep-3.7.1.jar:/home/megamortalgamer/.m2/repository/com/github/docker-java/docker-java-transport/3.7.1/docker-java-transport-3.7.1.jar:/home/megamortalgamer/.m2/repository/net/java/dev/jna/jna/5.18.1/jna-5.18.1.jar:/home/megamortalgamer/.m2/repository/com/zaxxer/HikariCP/7.1.0/HikariCP-7.1.0.jar:/home/megamortalgamer/.m2/repository/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="/home/megamortalgamer"/>
     <property name="user.language" value="pt"/>
@@ -28,7 +28,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="surefire.real.class.path" value="/home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/surefire/surefirebooter-20260909123823406_3.jar"/>
+    <property name="surefire.real.class.path" value="/home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/target/surefire/surefirebooter-20260909125541336_3.jar"/>
     <property name="polyglot.engine.WarnInterpreterOnly" value="false"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.11+10-1-25.10.2-Ubuntu"/>
@@ -38,7 +38,7 @@
     <property name="os.version" value="6.17.0-40-generic"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="file.encoding" value="UTF-8"/>
-    <property name="jnidispatch.path" value="/home/megamortalgamer/.cache/JNA/temp/jna4032399213389396578.tmp"/>
+    <property name="jnidispatch.path" value="/home/megamortalgamer/.cache/JNA/temp/jna8475926564296786326.tmp"/>
     <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
     <property name="jna.platform.library.path" value="/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu:/usr/lib64:/lib64:/usr/lib:/lib:/usr/lib/x86_64-linux-gnu/libfakeroot"/>
     <property name="localRepository" value="/home/megamortalgamer/.m2/repository"/>
@@ -58,65 +58,62 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="naoDeveDuplicarTransacoesAoSalvarContaNovamente" classname="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="0.531">
-    <system-err><![CDATA[SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
-SLF4J: Defaulting to no-operation (NOP) logger implementation
-SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
-SLF4J: Failed to load class "org.slf4j.impl.StaticMDCBinder".
-SLF4J: Defaulting to no-operation MDCAdapter implementation.
-SLF4J: See http://www.slf4j.org/codes.html#no_static_mdc_binder for further details.
-set. 09, 2026 12:38:27 PM org.flywaydb.core.FlywayExecutor init
+  <testcase name="naoDeveDuplicarTransacoesAoSalvarContaNovamente" classname="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="0.593">
+    <system-err><![CDATA[SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+set. 09, 2026 12:55:45 PM org.flywaydb.core.FlywayExecutor init
 INFORMAÇÕES: Database: ******** (PostgreSQL 17.11)
-set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory allAppliedMigrations
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory allAppliedMigrations
 INFORMAÇÕES: Schema history table "public"."flyway_schema_history" does not exist yet
-set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbValidate validate
-INFORMAÇÕES: Successfully validated 3 migrations (execution time 00:00.019s)
-set. 09, 2026 12:38:27 PM org.flywaydb.core.Flyway lambda$migrate$2
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.command.DbValidate validate
+INFORMAÇÕES: Successfully validated 3 migrations (execution time 00:00.030s)
+set. 09, 2026 12:55:45 PM org.flywaydb.core.Flyway lambda$migrate$2
 INFORMAÇÕES: All configured schemas are empty; a baseline marker will not be added to Flyway's schema history table. A baseline or migration script with a lower version than the baseline version may execute if available. Check the Schemas parameter if this is not intended. See https://help.red-gate.com/help/flyway-cli13/help_5.aspx?topic=baseline-on-migrate for more info
-set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory create
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory create
 INFORMAÇÕES: Creating Schema History table "public"."flyway_schema_history" ...
-set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate migrateGroup
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.command.DbMigrate migrateGroup
 INFORMAÇÕES: Current version of schema "public": << Empty Schema >>
-set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
 INFORMAÇÕES: Migrating schema "public" to version "1 - baseline schema"
-set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
 INFORMAÇÕES: Migrating schema "public" to version "2 - create index transacoes conta id"
-set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
 INFORMAÇÕES: Migrating schema "public" to version "3 - create index transacoes data hora"
-set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate logSummary
-INFORMAÇÕES: Successfully applied 3 migrations to schema "public", now at version v3 (execution time 00:00.024s)
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.command.DbMigrate logSummary
+INFORMAÇÕES: Successfully applied 3 migrations to schema "public", now at version v3 (execution time 00:00.022s)
 ]]></system-err>
   </testcase>
-  <testcase name="deveSalvarEBuscarContaNoPostgres" classname="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="0.073">
-    <system-err><![CDATA[set. 09, 2026 12:38:27 PM org.flywaydb.core.FlywayExecutor init
+  <testcase name="deveSalvarEBuscarContaNoPostgres" classname="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="0.071">
+    <system-err><![CDATA[set. 09, 2026 12:55:45 PM org.flywaydb.core.FlywayExecutor init
 INFORMAÇÕES: Database: ******** (PostgreSQL 17.11)
-set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbValidate validate
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.command.DbValidate validate
 INFORMAÇÕES: Successfully validated 3 migrations (execution time 00:00.005s)
-set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate migrateGroup
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.command.DbMigrate migrateGroup
 INFORMAÇÕES: Current version of schema "public": 3
-set. 09, 2026 12:38:27 PM org.flywaydb.core.internal.command.DbMigrate logSummary
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.command.DbMigrate logSummary
 INFORMAÇÕES: Schema "public" is up to date. No migration necessary.
 ]]></system-err>
   </testcase>
-  <testcase name="deveFazerRollbackQuandoUmaDasContasFalhar" classname="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="0.098">
-    <system-err><![CDATA[set. 09, 2026 12:38:28 PM org.flywaydb.core.FlywayExecutor init
+  <testcase name="deveFazerRollbackQuandoUmaDasContasFalhar" classname="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="0.07">
+    <system-err><![CDATA[set. 09, 2026 12:55:45 PM org.flywaydb.core.FlywayExecutor init
 INFORMAÇÕES: Database: ******** (PostgreSQL 17.11)
-set. 09, 2026 12:38:28 PM org.flywaydb.core.internal.command.DbValidate validate
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.command.DbValidate validate
 INFORMAÇÕES: Successfully validated 3 migrations (execution time 00:00.006s)
-set. 09, 2026 12:38:28 PM org.flywaydb.core.internal.command.DbMigrate migrateGroup
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.command.DbMigrate migrateGroup
 INFORMAÇÕES: Current version of schema "public": 3
-set. 09, 2026 12:38:28 PM org.flywaydb.core.internal.command.DbMigrate logSummary
+set. 09, 2026 12:55:45 PM org.flywaydb.core.internal.command.DbMigrate logSummary
 INFORMAÇÕES: Schema "public" is up to date. No migration necessary.
 ]]></system-err>
   </testcase>
-  <testcase name="devePersistirEReidratarHistoricoDeTransacoes" classname="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="0.074">
-    <system-err><![CDATA[set. 09, 2026 12:38:28 PM org.flywaydb.core.FlywayExecutor init
+  <testcase name="devePersistirEReidratarHistoricoDeTransacoes" classname="br.com.arthur.banco.ContaRepositoryPostgresIntegrationTest" time="0.078">
+    <system-err><![CDATA[set. 09, 2026 12:55:46 PM org.flywaydb.core.FlywayExecutor init
 INFORMAÇÕES: Database: ******** (PostgreSQL 17.11)
-set. 09, 2026 12:38:28 PM org.flywaydb.core.internal.command.DbValidate validate
+set. 09, 2026 12:55:46 PM org.flywaydb.core.internal.command.DbValidate validate
 INFORMAÇÕES: Successfully validated 3 migrations (execution time 00:00.005s)
-set. 09, 2026 12:38:28 PM org.flywaydb.core.internal.command.DbMigrate migrateGroup
+set. 09, 2026 12:55:46 PM org.flywaydb.core.internal.command.DbMigrate migrateGroup
 INFORMAÇÕES: Current version of schema "public": 3
-set. 09, 2026 12:38:28 PM org.flywaydb.core.internal.command.DbMigrate logSummary
+set. 09, 2026 12:55:46 PM org.flywaydb.core.internal.command.DbMigrate logSummary
 INFORMAÇÕES: Schema "public" is up to date. No migration necessary.
 ]]></system-err>
   </testcase>

@@ -1,7 +1,6 @@
 package br.com.arthur.banco;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,498 +11,499 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.sql.DataSource;
+
 public class ContaRepositoryPostgres implements ContaRepository {
 
-    private final String url;
-    private final String usuario;
-    private final String senha;
+        private final DataSource dataSource;
 
-    public ContaRepositoryPostgres(
-            DatabaseConfig config) {
-        if (config == null) {
-            throw new IllegalArgumentException(
-                    "Configuração do banco não pode ser nula.");
-        }
+        public ContaRepositoryPostgres(
+                        DataSource dataSource) {
 
-        this.url = config.getUrl();
-        this.usuario = config.getUsuario();
-        this.senha = config.getSenha();
-    }
-
-    @Override
-    public Optional<ContaBancaria> buscarPorNumero(
-            String numero) {
-
-        String sql = """
-                SELECT
-                    id,
-                    numero,
-                    titular,
-                    tipo AS conta_tipo,
-                    saldo
-                FROM contas
-                WHERE numero = ?
-                """;
-
-        try (
-                Connection connection = DriverManager.getConnection(
-                        url,
-                        usuario,
-                        senha);
-
-                PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setString(1, numero);
-
-            ContaBancaria conta;
-            long contaId;
-
-            try (
-                    ResultSet resultado = statement.executeQuery()) {
-
-                if (!resultado.next()) {
-                    return Optional.empty();
+                if (dataSource == null) {
+                        throw new IllegalArgumentException(
+                                        "DataSource não pode ser nulo.");
                 }
 
-                contaId = resultado.getLong("id");
-
-                conta = mapearConta(resultado);
-            }
-
-            List<Transacao> transacoes = buscarTransacoes(
-                    connection,
-                    contaId);
-
-            conta.reidratarHistorico(
-                    transacoes);
-
-            return Optional.of(conta);
-
-        } catch (SQLException e) {
-            throw new PersistenciaException(
-                    "Erro ao salvar conta no banco",
-                    e);
+                this.dataSource = dataSource;
         }
-    }
 
-    @Override
-    public void salvar(
-            ContaBancaria conta) {
+        @Override
+        public Optional<ContaBancaria> buscarPorNumero(
+                        String numero) {
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        url,
-                        usuario,
-                        senha)) {
+                String sql = """
+                                SELECT
+                                    id,
+                                    numero,
+                                    titular,
+                                    tipo AS conta_tipo,
+                                    saldo
+                                FROM contas
+                                WHERE numero = ?
+                                """;
 
-            connection.setAutoCommit(false);
+                try (
+                                Connection connection = dataSource.getConnection();
 
-            try {
+                                PreparedStatement statement = connection.prepareStatement(sql)) {
 
-                salvar(
-                        connection,
-                        conta);
+                        statement.setString(1, numero);
 
-                connection.commit();
+                        ContaBancaria conta;
+                        long contaId;
 
-            } catch (Exception e) {
+                        try (
+                                        ResultSet resultado = statement.executeQuery()) {
 
-                connection.rollback();
+                                if (!resultado.next()) {
+                                        return Optional.empty();
+                                }
 
-                throw e;
-            }
+                                contaId = resultado.getLong("id");
 
-        } catch (SQLException e) {
-            throw new PersistenciaException(
-                    "Erro ao salvar conta no banco",
-                    e);
+                                conta = mapearConta(resultado);
+                        }
+
+                        List<Transacao> transacoes = buscarTransacoes(
+                                        connection,
+                                        contaId);
+
+                        conta.reidratarHistorico(
+                                        transacoes);
+
+                        return Optional.of(conta);
+
+                } catch (SQLException e) {
+
+                        throw new PersistenciaException(
+                                        "Erro ao buscar conta no banco",
+                                        e);
+                }
         }
-    }
 
-    private void salvar(
-            Connection connection,
-            ContaBancaria conta)
-            throws SQLException {
+        @Override
+        public void salvar(
+                        ContaBancaria conta) {
 
-        long contaId = salvarConta(
-                connection,
-                conta);
+                try (
+                                Connection connection = dataSource.getConnection()) {
 
-        salvarTransacoes(
-                connection,
-                contaId,
-                conta);
-    }
+                        connection.setAutoCommit(false);
 
-    @Override
-    public List<ContaBancaria> listarTodas() {
+                        try {
 
-        String sql = """
-                SELECT
-                    c.id AS conta_id,
-                    c.numero,
-                    c.titular,
-                    c.tipo AS conta_tipo,
-                    c.saldo,
+                                salvar(
+                                                connection,
+                                                conta);
 
-                    t.identificador,
-                    t.tipo AS transacao_tipo,
-                    t.valor,
-                    t.data_hora
+                                connection.commit();
 
-                FROM contas c
+                        } catch (Exception e) {
 
-                LEFT JOIN transacoes t
-                    ON t.conta_id = c.id
+                                connection.rollback();
 
-                ORDER BY
-                    c.id,
-                    t.data_hora,
-                    t.id
-                """;
+                                throw e;
+                        }
 
-        Map<Long, ContaBancaria> contas = new LinkedHashMap<>();
+                } catch (SQLException e) {
 
-        Map<Long, List<Transacao>> historicos = new LinkedHashMap<>();
+                        throw new PersistenciaException(
+                                        "Erro ao salvar conta no banco",
+                                        e);
+                }
+        }
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        url,
-                        usuario,
-                        senha);
+        private void salvar(
+                        Connection connection,
+                        ContaBancaria conta)
+                        throws SQLException {
 
-                PreparedStatement statement = connection.prepareStatement(sql);
+                long contaId = salvarConta(
+                                connection,
+                                conta);
 
-                ResultSet resultado = statement.executeQuery()) {
+                salvarTransacoes(
+                                connection,
+                                contaId,
+                                conta);
+        }
 
-            while (resultado.next()) {
+        @Override
+        public List<ContaBancaria> listarTodas() {
 
-                long contaId = resultado.getLong("conta_id");
+                String sql = """
+                                SELECT
+                                    c.id AS conta_id,
+                                    c.numero,
+                                    c.titular,
+                                    c.tipo AS conta_tipo,
+                                    c.saldo,
 
-                if (!contas.containsKey(contaId)) {
+                                    t.identificador,
+                                    t.tipo AS transacao_tipo,
+                                    t.valor,
+                                    t.data_hora
 
-                    ContaBancaria conta = mapearConta(resultado);
+                                FROM contas c
 
-                    contas.put(
-                            contaId,
-                            conta);
+                                LEFT JOIN transacoes t
+                                    ON t.conta_id = c.id
 
-                    historicos.put(
-                            contaId,
-                            new ArrayList<>());
+                                ORDER BY
+                                    c.id,
+                                    t.data_hora,
+                                    t.id
+                                """;
+
+                Map<Long, ContaBancaria> contas = new LinkedHashMap<>();
+
+                Map<Long, List<Transacao>> historicos = new LinkedHashMap<>();
+
+                try (
+                                Connection connection = dataSource.getConnection();
+
+                                PreparedStatement statement = connection.prepareStatement(sql);
+
+                                ResultSet resultado = statement.executeQuery()) {
+
+                        while (resultado.next()) {
+
+                                long contaId = resultado.getLong(
+                                                "conta_id");
+
+                                if (!contas.containsKey(contaId)) {
+
+                                        ContaBancaria conta = mapearConta(resultado);
+
+                                        contas.put(
+                                                        contaId,
+                                                        conta);
+
+                                        historicos.put(
+                                                        contaId,
+                                                        new ArrayList<>());
+                                }
+
+                                Object identificador = resultado.getObject(
+                                                "identificador");
+
+                                if (identificador != null) {
+
+                                        Transacao transacao = mapearTransacao(
+                                                        resultado);
+
+                                        historicos
+                                                        .get(contaId)
+                                                        .add(transacao);
+                                }
+                        }
+
+                        for (Map.Entry<Long, ContaBancaria> entry : contas.entrySet()) {
+
+                                long contaId = entry.getKey();
+
+                                ContaBancaria conta = entry.getValue();
+
+                                conta.reidratarHistorico(
+                                                historicos.get(contaId));
+                        }
+
+                        return new ArrayList<>(
+                                        contas.values());
+
+                } catch (SQLException e) {
+
+                        throw new PersistenciaException(
+                                        "Erro ao listar contas do banco",
+                                        e);
+                }
+        }
+
+        private ContaBancaria mapearConta(
+                        ResultSet resultado)
+                        throws SQLException {
+
+                String numero = resultado.getString(
+                                "numero");
+
+                String titular = resultado.getString(
+                                "titular");
+
+                String tipo = resultado.getString(
+                                "conta_tipo");
+
+                double saldo = resultado.getDouble(
+                                "saldo");
+
+                return switch (tipo) {
+
+                        case "CORRENTE" ->
+                                ContaCorrente.reidratar(
+                                                titular,
+                                                numero,
+                                                saldo);
+
+                        case "POUPANCA" ->
+                                ContaPoupanca.reidratar(
+                                                titular,
+                                                numero,
+                                                saldo);
+
+                        default ->
+                                throw new IllegalStateException(
+                                                "Tipo de conta desconhecido: "
+                                                                + tipo);
+                };
+        }
+
+        private long salvarConta(
+                        Connection connection,
+                        ContaBancaria conta)
+                        throws SQLException {
+
+                String sql = """
+                                INSERT INTO contas (
+                                    numero,
+                                    titular,
+                                    tipo,
+                                    saldo
+                                )
+                                VALUES (?, ?, ?, ?)
+
+                                ON CONFLICT (numero)
+                                DO UPDATE SET
+                                    titular = EXCLUDED.titular,
+                                    tipo = EXCLUDED.tipo,
+                                    saldo = EXCLUDED.saldo
+
+                                RETURNING id
+                                """;
+
+                String tipo;
+
+                if (conta instanceof ContaCorrente) {
+
+                        tipo = "CORRENTE";
+
+                } else if (conta instanceof ContaPoupanca) {
+
+                        tipo = "POUPANCA";
+
+                } else {
+
+                        throw new IllegalArgumentException(
+                                        "Tipo de conta não suportado: "
+                                                        + conta
+                                                                        .getClass()
+                                                                        .getSimpleName());
                 }
 
-                Object identificador = resultado.getObject(
-                        "identificador");
+                try (
+                                PreparedStatement statement = connection.prepareStatement(
+                                                sql)) {
 
-                if (identificador != null) {
+                        statement.setString(
+                                        1,
+                                        conta.getNumero());
 
-                    Transacao transacao = mapearTransacao(resultado);
+                        statement.setString(
+                                        2,
+                                        conta.getTitular());
 
-                    historicos
-                            .get(contaId)
-                            .add(transacao);
+                        statement.setString(
+                                        3,
+                                        tipo);
+
+                        statement.setDouble(
+                                        4,
+                                        conta.getSaldo());
+
+                        try (
+                                        ResultSet resultado = statement.executeQuery()) {
+
+                                if (!resultado.next()) {
+
+                                        throw new SQLException(
+                                                        "Não foi possível obter o ID da conta.");
+                                }
+
+                                return resultado.getLong(
+                                                "id");
+                        }
                 }
-            }
-
-            for (Map.Entry<Long, ContaBancaria> entry : contas.entrySet()) {
-
-                long contaId = entry.getKey();
-
-                ContaBancaria conta = entry.getValue();
-
-                conta.reidratarHistorico(
-                        historicos.get(contaId));
-            }
-
-            return new ArrayList<>(
-                    contas.values());
-
-        } catch (SQLException e) {
-            throw new PersistenciaException(
-                    "Erro ao salvar conta no banco",
-                    e);
-        }
-    }
-
-    private ContaBancaria mapearConta(
-            ResultSet resultado)
-            throws SQLException {
-
-        String numero = resultado.getString("numero");
-
-        String titular = resultado.getString("titular");
-
-        String tipo = resultado.getString("conta_tipo");
-
-        double saldo = resultado.getDouble("saldo");
-
-        return switch (tipo) {
-
-            case "CORRENTE" ->
-                ContaCorrente.reidratar(
-                        titular,
-                        numero,
-                        saldo);
-
-            case "POUPANCA" ->
-                ContaPoupanca.reidratar(
-                        titular,
-                        numero,
-                        saldo);
-
-            default ->
-                throw new IllegalStateException(
-                        "Tipo de conta desconhecido: "
-                                + tipo);
-        };
-    }
-
-    private long salvarConta(
-            Connection connection,
-            ContaBancaria conta)
-            throws SQLException {
-
-        String sql = """
-                INSERT INTO contas (
-                    numero,
-                    titular,
-                    tipo,
-                    saldo
-                )
-                VALUES (?, ?, ?, ?)
-
-                ON CONFLICT (numero)
-                DO UPDATE SET
-                    titular = EXCLUDED.titular,
-                    tipo = EXCLUDED.tipo,
-                    saldo = EXCLUDED.saldo
-
-                RETURNING id
-                """;
-
-        String tipo;
-
-        if (conta instanceof ContaCorrente) {
-
-            tipo = "CORRENTE";
-
-        } else if (conta instanceof ContaPoupanca) {
-
-            tipo = "POUPANCA";
-
-        } else {
-
-            throw new IllegalArgumentException(
-                    "Tipo de conta não suportado: "
-                            + conta
-                                    .getClass()
-                                    .getSimpleName());
         }
 
-        try (
-                PreparedStatement statement = connection.prepareStatement(sql)) {
+        private void salvarTransacoes(
+                        Connection connection,
+                        long contaId,
+                        ContaBancaria conta)
+                        throws SQLException {
 
-            statement.setString(
-                    1,
-                    conta.getNumero());
+                String sql = """
+                                INSERT INTO transacoes (
+                                    identificador,
+                                    conta_id,
+                                    tipo,
+                                    valor,
+                                    data_hora
+                                )
+                                VALUES (?, ?, ?, ?, ?)
 
-            statement.setString(
-                    2,
-                    conta.getTitular());
+                                ON CONFLICT (identificador)
+                                DO NOTHING
+                                """;
 
-            statement.setString(
-                    3,
-                    tipo);
+                try (
+                                PreparedStatement statement = connection.prepareStatement(
+                                                sql)) {
 
-            statement.setDouble(
-                    4,
-                    conta.getSaldo());
+                        for (Transacao transacao : conta.getTransacaosHistorico()) {
 
-            try (
-                    ResultSet resultado = statement.executeQuery()) {
+                                statement.setObject(
+                                                1,
+                                                transacao.getId());
 
-                if (!resultado.next()) {
+                                statement.setLong(
+                                                2,
+                                                contaId);
 
-                    throw new SQLException(
-                            "Não foi possível obter o ID da conta.");
+                                statement.setString(
+                                                3,
+                                                transacao
+                                                                .getTipo()
+                                                                .name());
+
+                                statement.setDouble(
+                                                4,
+                                                transacao.getValor());
+
+                                statement.setObject(
+                                                5,
+                                                transacao.getDataHora());
+
+                                statement.executeUpdate();
+                        }
                 }
-
-                return resultado.getLong("id");
-            }
         }
-    }
 
-    private void salvarTransacoes(
-            Connection connection,
-            long contaId,
-            ContaBancaria conta)
-            throws SQLException {
+        @Override
+        public void salvarTodas(
+                        List<ContaBancaria> contas) {
 
-        String sql = """
-                INSERT INTO transacoes (
-                    identificador,
-                    conta_id,
-                    tipo,
-                    valor,
-                    data_hora
-                )
-                VALUES (?, ?, ?, ?, ?)
+                try (
+                                Connection connection = dataSource.getConnection()) {
 
-                ON CONFLICT (identificador)
-                DO NOTHING
-                """;
+                        connection.setAutoCommit(false);
 
-        try (
-                PreparedStatement statement = connection.prepareStatement(sql)) {
+                        try {
 
-            for (Transacao transacao : conta.getTransacaosHistorico()) {
+                                for (ContaBancaria conta : contas) {
 
-                statement.setObject(
-                        1,
-                        transacao.getId());
+                                        salvar(
+                                                        connection,
+                                                        conta);
+                                }
 
-                statement.setLong(
-                        2,
-                        contaId);
+                                connection.commit();
 
-                statement.setString(
-                        3,
-                        transacao
-                                .getTipo()
-                                .name());
+                        } catch (Exception e) {
 
-                statement.setDouble(
-                        4,
-                        transacao.getValor());
+                                connection.rollback();
 
-                statement.setObject(
-                        5,
-                        transacao.getDataHora());
+                                throw e;
+                        }
 
-                statement.executeUpdate();
-            }
+                } catch (SQLException e) {
+
+                        throw new PersistenciaException(
+                                        "Erro ao salvar contas no banco",
+                                        e);
+                }
         }
-    }
 
-    @Override
-    public void salvarTodas(
-            List<ContaBancaria> contas) {
+        private List<Transacao> buscarTransacoes(
+                        Connection connection,
+                        long contaId)
+                        throws SQLException {
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        url,
-                        usuario,
-                        senha)) {
+                String sql = """
+                                SELECT
+                                    identificador,
+                                    tipo,
+                                    valor,
+                                    data_hora
+                                FROM transacoes
+                                WHERE conta_id = ?
+                                ORDER BY data_hora, id
+                                """;
 
-            connection.setAutoCommit(false);
+                List<Transacao> transacoes = new ArrayList<>();
 
-            try {
+                try (
+                                PreparedStatement statement = connection.prepareStatement(
+                                                sql)) {
 
-                for (ContaBancaria conta : contas) {
+                        statement.setLong(
+                                        1,
+                                        contaId);
 
-                    salvar(
-                            connection,
-                            conta);
+                        try (
+                                        ResultSet resultado = statement.executeQuery()) {
+
+                                while (resultado.next()) {
+
+                                        UUID identificador = resultado.getObject(
+                                                        "identificador",
+                                                        UUID.class);
+
+                                        TipoTransacao tipo = TipoTransacao.valueOf(
+                                                        resultado.getString(
+                                                                        "tipo"));
+
+                                        double valor = resultado.getDouble(
+                                                        "valor");
+
+                                        Transacao transacao = Transacao.reidratar(
+                                                        identificador,
+                                                        tipo,
+                                                        valor,
+                                                        resultado
+                                                                        .getTimestamp(
+                                                                                        "data_hora")
+                                                                        .toLocalDateTime());
+
+                                        transacoes.add(
+                                                        transacao);
+                                }
+                        }
                 }
 
-                connection.commit();
-
-            } catch (Exception e) {
-
-                connection.rollback();
-
-                throw e;
-            }
-
-        } catch (SQLException e) {
-            throw new PersistenciaException(
-                    "Erro ao salvar conta no banco",
-                    e);
-        }
-    }
-
-    private List<Transacao> buscarTransacoes(
-            Connection connection,
-            long contaId)
-            throws SQLException {
-
-        String sql = """
-                SELECT
-                    identificador,
-                    tipo,
-                    valor,
-                    data_hora
-                FROM transacoes
-                WHERE conta_id = ?
-                ORDER BY data_hora, id
-                """;
-
-        List<Transacao> transacoes = new ArrayList<>();
-
-        try (
-                PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setLong(
-                    1,
-                    contaId);
-
-            try (
-                    ResultSet resultado = statement.executeQuery()) {
-
-                while (resultado.next()) {
-
-                    UUID identificador = resultado.getObject(
-                            "identificador",
-                            UUID.class);
-
-                    TipoTransacao tipo = TipoTransacao.valueOf(
-                            resultado.getString(
-                                    "tipo"));
-
-                    double valor = resultado.getDouble(
-                            "valor");
-
-                    Transacao transacao = Transacao.reidratar(
-                            identificador,
-                            tipo,
-                            valor,
-                            resultado
-                                    .getTimestamp(
-                                            "data_hora")
-                                    .toLocalDateTime());
-
-                    transacoes.add(
-                            transacao);
-                }
-            }
+                return transacoes;
         }
 
-        return transacoes;
-    }
+        private Transacao mapearTransacao(
+                        ResultSet resultado)
+                        throws SQLException {
 
-    private Transacao mapearTransacao(
-            ResultSet resultado)
-            throws SQLException {
+                UUID identificador = resultado.getObject(
+                                "identificador",
+                                UUID.class);
 
-        UUID identificador = resultado.getObject(
-                "identificador",
-                UUID.class);
+                TipoTransacao tipo = TipoTransacao.valueOf(
+                                resultado.getString(
+                                                "transacao_tipo"));
 
-        TipoTransacao tipo = TipoTransacao.valueOf(
-                resultado.getString(
-                        "transacao_tipo"));
+                double valor = resultado.getDouble(
+                                "valor");
 
-        double valor = resultado.getDouble(
-                "valor");
-
-        return Transacao.reidratar(
-                identificador,
-                tipo,
-                valor,
-                resultado
-                        .getTimestamp(
-                                "data_hora")
-                        .toLocalDateTime());
-    }
+                return Transacao.reidratar(
+                                identificador,
+                                tipo,
+                                valor,
+                                resultado
+                                                .getTimestamp(
+                                                                "data_hora")
+                                                .toLocalDateTime());
+        }
 }

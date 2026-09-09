@@ -1,5 +1,7 @@
 package br.com.arthur.banco;
 
+import javax.sql.DataSource;
+
 import org.flywaydb.core.Flyway;
 
 public final class DatabaseMigration {
@@ -7,13 +9,16 @@ public final class DatabaseMigration {
     private DatabaseMigration() {
     }
 
-    public static void migrate(DatabaseConfig config) {
+    public static void migrate(
+            DataSource dataSource) {
+
+        if (dataSource == null) {
+            throw new IllegalArgumentException(
+                    "DataSource não pode ser nulo.");
+        }
 
         Flyway flyway = Flyway.configure()
-                .dataSource(
-                        config.getUrl(),
-                        config.getUsuario(),
-                        config.getSenha())
+                .dataSource(dataSource)
                 .baselineOnMigrate(true)
                 .load();
 

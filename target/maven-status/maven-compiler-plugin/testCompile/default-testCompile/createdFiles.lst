@@ -11,5 +11,6 @@ br/com/arthur/banco/CalculadoraTempoTransacaoTest.class
 br/com/arthur/banco/CaixaTest.class
 br/com/arthur/banco/ContaCorrenteTest.class
 br/com/arthur/banco/TransacaoTest.class
+br/com/arthur/banco/ContaRepositoryPostgresIntegrationTest.class
 br/com/arthur/banco/CalculadoraPeriodoTest.class
 br/com/arthur/banco/ContaControllerTest.class
