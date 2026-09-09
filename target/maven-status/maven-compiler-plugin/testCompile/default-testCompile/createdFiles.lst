@@ -1,0 +1,15 @@
+br/com/arthur/banco/RepositorioContaTest.class
+br/com/arthur/banco/ContaResumoTest.class
+br/com/arthur/banco/ContaPoupancaTest.class
+br/com/arthur/banco/ArquivoServiceTest.class
+br/com/arthur/banco/HistoricoArquivoServiceTest.class
+br/com/arthur/banco/RelatorioContasTest.class
+br/com/arthur/banco/ContaServiceTest.class
+br/com/arthur/banco/ContaBancariaTest.class
+br/com/arthur/banco/ContaRepositoryEmMemoriaTest.class
+br/com/arthur/banco/CalculadoraTempoTransacaoTest.class
+br/com/arthur/banco/CaixaTest.class
+br/com/arthur/banco/ContaCorrenteTest.class
+br/com/arthur/banco/TransacaoTest.class
+br/com/arthur/banco/CalculadoraPeriodoTest.class
+br/com/arthur/banco/ContaControllerTest.class

@@ -17,6 +17,7 @@
 /home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/src/main/java/br/com/arthur/banco/ContaService.java
 /home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/src/main/java/br/com/arthur/banco/CriarContaRequest.java
 /home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/src/main/java/br/com/arthur/banco/DatabaseConfig.java
+/home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/src/main/java/br/com/arthur/banco/DatabaseMigration.java
 /home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/src/main/java/br/com/arthur/banco/ExportacaoException.java
 /home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/src/main/java/br/com/arthur/banco/HistoricoArquivoService.java
 /home/megamortalgamer/Documentos/estudos-java/Introducao/Banco/src/main/java/br/com/arthur/banco/PersistenciaException.java

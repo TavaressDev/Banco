@@ -7,8 +7,7 @@ public final class DatabaseMigration {
     private DatabaseMigration() {
     }
 
-    public static void migrate(
-            DatabaseConfig config) {
+    public static void migrate(DatabaseConfig config) {
 
         Flyway flyway = Flyway.configure()
                 .dataSource(
