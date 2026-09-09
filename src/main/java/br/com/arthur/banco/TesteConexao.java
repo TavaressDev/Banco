@@ -6,6 +6,8 @@ public class TesteConexao {
 
                 DatabaseConfig config = DatabaseConfig.fromEnvironment();
 
+                DatabaseMigration.migrate(config);
+
                 ContaRepository repository = new ContaRepositoryPostgres(config);
 
                 ContaBancaria conta = repository
